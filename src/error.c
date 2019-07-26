@@ -22,3 +22,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+_Noreturn void error(int line, int row, const char* file, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    printf("%s:%d:%d error : ", file, line, row);
+    vprintf(fmt, args);
+
+    va_end(args);
+
+    exit(1);
+}
+
+void warn (int line, int row, const char* file, const char *fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    printf("%s:%d:%d warning : ", file, line, row);
+    vprintf(fmt, args);
+
+    va_end(args);
+}

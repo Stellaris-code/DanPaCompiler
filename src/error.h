@@ -25,4 +25,7 @@ SOFTWARE.
 #ifndef ERROR_H
 #define ERROR_H
 
+_Noreturn void error(int line, int row, const char* file, const char *fmt, ...);
+void warn (int line, int row, const char* file, const char* fmt, ...);
+
 #endif // ERROR_H

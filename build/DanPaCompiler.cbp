@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="DanPaCompiler"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/yann/QtProjects/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/yann/QtProjects/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler">
+				<Option output="/home/yann/QtProjects/DanPaCompiler/build/DanPaCompiler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yann/QtProjects/DanPaCompiler/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/yann/QtProjects/DanPaCompiler/src/."/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0"/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/clang/8.0.0/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler/fast">
+				<Option output="/home/yann/QtProjects/DanPaCompiler/build/DanPaCompiler" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yann/QtProjects/DanPaCompiler/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/yann/QtProjects/DanPaCompiler/src/."/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0"/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/x86_64-pc-linux-gnu"/>
+					<Add directory="/bin/../lib64/gcc/x86_64-pc-linux-gnu/8.3.0/../../../../include/c++/8.3.0/backward"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/clang/8.0.0/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler/fast"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/yann/QtProjects/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j2 -f &quot;/home/yann/QtProjects/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/build/DanPaCompiler">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/ast_printer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/ast_printer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/code_generator.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/code_generator.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/dynarray.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/error.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/error.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/lexer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/lexer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/main.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/parser.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/parser.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/scope_frame.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/types.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/src/types.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="/home/yann/QtProjects/DanPaCompiler/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

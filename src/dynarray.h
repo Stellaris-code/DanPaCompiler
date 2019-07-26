@@ -25,4 +25,37 @@ SOFTWARE.
 #ifndef DYNARRAY_H
 #define DYNARRAY_H
 
+#include <stdlib.h>
+
+#define DYNARRAY(type) \
+    struct { \
+        int size, capacity; \
+        type* ptr; \
+    }
+
+#define DYNARRAY_INIT(array, default_capacity) \
+    do { \
+    (array).size = 0; \
+    (array).capacity = (default_capacity); \
+    if (default_capacity) \
+        (array).ptr = malloc((array).capacity * sizeof(*(array).ptr)); \
+    else \
+        (array).ptr = NULL; \
+    } while (0)
+
+#define DYNARRAY_ADD(array, ...) \
+    do { \
+    ++(array).size; \
+    if ((array).size >= (array).capacity) {\
+        if ((array).capacity == 0) \
+            (array).capacity = 1; \
+        (array).capacity *= 2; \
+        (array).ptr = realloc((array).ptr, sizeof(*(array).ptr)*(array).capacity);}\
+     typeof(*(array).ptr) tmp = __VA_ARGS__; \
+    (array).ptr[(array).size-1] = tmp; \
+    } while (0)
+
+#define DYNARRAY_FREE(array) \
+    free((array).ptr)
+
 #endif // DYNARRAY_H

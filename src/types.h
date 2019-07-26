@@ -25,4 +25,15 @@ SOFTWARE.
 #ifndef TYPES_H
 #define TYPES_H
 
+typedef enum type_t
+{
+    INT,
+    REAL,
+    STR,
+    VOID,
+
+    TYPES_END
+} type_t;
+extern const char* types_str[TYPES_END];
+
 #endif // TYPES_H

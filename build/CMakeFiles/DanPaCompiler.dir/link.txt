@@ -1,0 +1,1 @@
+/bin/clang -g   CMakeFiles/DanPaCompiler.dir/src/ast_printer.c.o CMakeFiles/DanPaCompiler.dir/src/code_generator.c.o CMakeFiles/DanPaCompiler.dir/src/error.c.o CMakeFiles/DanPaCompiler.dir/src/lexer.c.o CMakeFiles/DanPaCompiler.dir/src/main.c.o CMakeFiles/DanPaCompiler.dir/src/parser.c.o CMakeFiles/DanPaCompiler.dir/src/types.c.o  -o DanPaCompiler -lubsan 

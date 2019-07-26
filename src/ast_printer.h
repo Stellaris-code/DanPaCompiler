@@ -1,5 +1,5 @@
 /*
-ast_visitor.h
+ast_printer.h
 
 Copyright (c) 19 Yann BOUCHER (yann)
 
@@ -22,7 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
-#ifndef AST_VISITOR_H
-#define AST_VISITOR_H
+#ifndef AST_PRINTER_H
+#define AST_PRINTER_H
 
-#endif // AST_VISITOR_H
+#include "parser.h"
+
+void print_program(program_t* prgm);
+void print_function(function_t* func);
+void print_statement(statement_t* statement);
+void print_return_statement(return_statement_t* statement);
+void print_if_statement(if_statement_t* if_statement);
+void print_assignment(assignment_t* assignment);
+void print_expression(expression_t* expr);
+void print_binop(binop_t* binop);
+
+#endif // AST_PRINT_H

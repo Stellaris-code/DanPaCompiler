@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/yann/QtProjects/DanPaCompiler/src/ast_printer.h
+parser.h
+/home/yann/QtProjects/DanPaCompiler/src/parser.h
+
+/home/yann/QtProjects/DanPaCompiler/src/code_generator.h
+parser.h
+/home/yann/QtProjects/DanPaCompiler/src/parser.h
+
+/home/yann/QtProjects/DanPaCompiler/src/dynarray.h
+stdlib.h
+-
+
+/home/yann/QtProjects/DanPaCompiler/src/lexer.h
+
+/home/yann/QtProjects/DanPaCompiler/src/main.c
+stdio.h
+-
+lexer.h
+/home/yann/QtProjects/DanPaCompiler/src/lexer.h
+parser.h
+/home/yann/QtProjects/DanPaCompiler/src/parser.h
+ast_printer.h
+/home/yann/QtProjects/DanPaCompiler/src/ast_printer.h
+code_generator.h
+/home/yann/QtProjects/DanPaCompiler/src/code_generator.h
+
+/home/yann/QtProjects/DanPaCompiler/src/parser.h
+dynarray.h
+/home/yann/QtProjects/DanPaCompiler/src/dynarray.h
+types.h
+/home/yann/QtProjects/DanPaCompiler/src/types.h
+
+/home/yann/QtProjects/DanPaCompiler/src/types.h
+

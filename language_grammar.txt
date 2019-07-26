@@ -1,0 +1,24 @@
+program = function* EOF
+function = type ident "(" (ident ident ",")* ")" "{" statement* "}"
+
+if-statement = 'if' '(' expr ')' statement { 'else' 'if' '(' expr ')' statement}* {'else' statement}?
+compound-statement = '{' { statement }* '}'
+declaration-statement = type ident (= expr)? ;
+statement = (return-statement | assignment | if-statement | compound-statement) ';'
+assignment = ident "=" expr
+return-statement = RETURN expr
+
+
+op-expr = val {op val}*
+expr = op-expr | {ident '=' expr}
+val = ident | constant | "(" expr ")" | unary 
+
+        "int main()\n"
+        "{\n"
+        "   if (errno + EFAULT)\n"
+        "       return format(\" test (%s)\", argc);\n"
+        "   return 2*bob;\n"
+        "}";
+
+// alternate:
+

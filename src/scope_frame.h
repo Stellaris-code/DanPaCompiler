@@ -25,4 +25,18 @@ SOFTWARE.
 #ifndef SCOPE_FRAME_H
 #define SCOPE_FRAME_H
 
+#include "types.h"
+#include "dynarray.h"
+
+typedef struct local_var_t
+{
+    type_t type;
+    const char* name;
+} local_var_t;
+
+typedef struct scope_frame_t
+{
+    DYNARRAY(local_var_t) local_variables;
+} scope_frame_t;
+
 #endif // SCOPE_FRAME_H

@@ -1,0 +1,2307 @@
+
+DanPaCompiler:     format de fichier elf64-x86-64
+
+
+Déassemblage de la section .init :
+
+0000000000001000 <_init>:
+    1000:	f3 0f 1e fa          	endbr64 
+    1004:	48 83 ec 08          	sub    rsp,0x8
+    1008:	48 8b 05 d1 3f 00 00 	mov    rax,QWORD PTR [rip+0x3fd1]        # 4fe0 <__gmon_start__>
+    100f:	48 85 c0             	test   rax,rax
+    1012:	74 02                	je     1016 <_init+0x16>
+    1014:	ff d0                	call   rax
+    1016:	48 83 c4 08          	add    rsp,0x8
+    101a:	c3                   	ret    
+
+Déassemblage de la section .plt :
+
+0000000000001020 <.plt>:
+    1020:	ff 35 e2 3f 00 00    	push   QWORD PTR [rip+0x3fe2]        # 5008 <_GLOBAL_OFFSET_TABLE_+0x8>
+    1026:	ff 25 e4 3f 00 00    	jmp    QWORD PTR [rip+0x3fe4]        # 5010 <_GLOBAL_OFFSET_TABLE_+0x10>
+    102c:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000001030 <putchar@plt>:
+    1030:	ff 25 e2 3f 00 00    	jmp    QWORD PTR [rip+0x3fe2]        # 5018 <putchar@GLIBC_2.2.5>
+    1036:	68 00 00 00 00       	push   0x0
+    103b:	e9 e0 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001040 <__errno_location@plt>:
+    1040:	ff 25 da 3f 00 00    	jmp    QWORD PTR [rip+0x3fda]        # 5020 <__errno_location@GLIBC_2.2.5>
+    1046:	68 01 00 00 00       	push   0x1
+    104b:	e9 d0 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001050 <strncmp@plt>:
+    1050:	ff 25 d2 3f 00 00    	jmp    QWORD PTR [rip+0x3fd2]        # 5028 <strncmp@GLIBC_2.2.5>
+    1056:	68 02 00 00 00       	push   0x2
+    105b:	e9 c0 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001060 <puts@plt>:
+    1060:	ff 25 ca 3f 00 00    	jmp    QWORD PTR [rip+0x3fca]        # 5030 <puts@GLIBC_2.2.5>
+    1066:	68 03 00 00 00       	push   0x3
+    106b:	e9 b0 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001070 <strtod@plt>:
+    1070:	ff 25 c2 3f 00 00    	jmp    QWORD PTR [rip+0x3fc2]        # 5038 <strtod@GLIBC_2.2.5>
+    1076:	68 04 00 00 00       	push   0x4
+    107b:	e9 a0 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001080 <strlen@plt>:
+    1080:	ff 25 ba 3f 00 00    	jmp    QWORD PTR [rip+0x3fba]        # 5040 <strlen@GLIBC_2.2.5>
+    1086:	68 05 00 00 00       	push   0x5
+    108b:	e9 90 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001090 <__stack_chk_fail@plt>:
+    1090:	ff 25 b2 3f 00 00    	jmp    QWORD PTR [rip+0x3fb2]        # 5048 <__stack_chk_fail@GLIBC_2.4>
+    1096:	68 06 00 00 00       	push   0x6
+    109b:	e9 80 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010a0 <strchr@plt>:
+    10a0:	ff 25 aa 3f 00 00    	jmp    QWORD PTR [rip+0x3faa]        # 5050 <strchr@GLIBC_2.2.5>
+    10a6:	68 07 00 00 00       	push   0x7
+    10ab:	e9 70 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010b0 <printf@plt>:
+    10b0:	ff 25 a2 3f 00 00    	jmp    QWORD PTR [rip+0x3fa2]        # 5058 <printf@GLIBC_2.2.5>
+    10b6:	68 08 00 00 00       	push   0x8
+    10bb:	e9 60 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010c0 <__assert_fail@plt>:
+    10c0:	ff 25 9a 3f 00 00    	jmp    QWORD PTR [rip+0x3f9a]        # 5060 <__assert_fail@GLIBC_2.2.5>
+    10c6:	68 09 00 00 00       	push   0x9
+    10cb:	e9 50 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010d0 <strtol@plt>:
+    10d0:	ff 25 92 3f 00 00    	jmp    QWORD PTR [rip+0x3f92]        # 5068 <strtol@GLIBC_2.2.5>
+    10d6:	68 0a 00 00 00       	push   0xa
+    10db:	e9 40 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010e0 <memcpy@plt>:
+    10e0:	ff 25 8a 3f 00 00    	jmp    QWORD PTR [rip+0x3f8a]        # 5070 <memcpy@GLIBC_2.14>
+    10e6:	68 0b 00 00 00       	push   0xb
+    10eb:	e9 30 ff ff ff       	jmp    1020 <.plt>
+
+00000000000010f0 <malloc@plt>:
+    10f0:	ff 25 82 3f 00 00    	jmp    QWORD PTR [rip+0x3f82]        # 5078 <malloc@GLIBC_2.2.5>
+    10f6:	68 0c 00 00 00       	push   0xc
+    10fb:	e9 20 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001100 <vprintf@plt>:
+    1100:	ff 25 7a 3f 00 00    	jmp    QWORD PTR [rip+0x3f7a]        # 5080 <vprintf@GLIBC_2.2.5>
+    1106:	68 0d 00 00 00       	push   0xd
+    110b:	e9 10 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001110 <realloc@plt>:
+    1110:	ff 25 72 3f 00 00    	jmp    QWORD PTR [rip+0x3f72]        # 5088 <realloc@GLIBC_2.2.5>
+    1116:	68 0e 00 00 00       	push   0xe
+    111b:	e9 00 ff ff ff       	jmp    1020 <.plt>
+
+0000000000001120 <exit@plt>:
+    1120:	ff 25 6a 3f 00 00    	jmp    QWORD PTR [rip+0x3f6a]        # 5090 <exit@GLIBC_2.2.5>
+    1126:	68 0f 00 00 00       	push   0xf
+    112b:	e9 f0 fe ff ff       	jmp    1020 <.plt>
+
+0000000000001130 <__ctype_b_loc@plt>:
+    1130:	ff 25 62 3f 00 00    	jmp    QWORD PTR [rip+0x3f62]        # 5098 <__ctype_b_loc@GLIBC_2.3>
+    1136:	68 10 00 00 00       	push   0x10
+    113b:	e9 e0 fe ff ff       	jmp    1020 <.plt>
+
+Déassemblage de la section .text :
+
+0000000000001140 <_start>:
+    1140:	f3 0f 1e fa          	endbr64 
+    1144:	31 ed                	xor    ebp,ebp
+    1146:	49 89 d1             	mov    r9,rdx
+    1149:	5e                   	pop    rsi
+    114a:	48 89 e2             	mov    rdx,rsp
+    114d:	48 83 e4 f0          	and    rsp,0xfffffffffffffff0
+    1151:	50                   	push   rax
+    1152:	54                   	push   rsp
+    1153:	4c 8d 05 76 15 00 00 	lea    r8,[rip+0x1576]        # 26d0 <__libc_csu_fini>
+    115a:	48 8d 0d ff 14 00 00 	lea    rcx,[rip+0x14ff]        # 2660 <__libc_csu_init>
+    1161:	48 8d 3d 68 0d 00 00 	lea    rdi,[rip+0xd68]        # 1ed0 <main>
+    1168:	ff 15 6a 3e 00 00    	call   QWORD PTR [rip+0x3e6a]        # 4fd8 <__libc_start_main@GLIBC_2.2.5>
+    116e:	f4                   	hlt    
+    116f:	90                   	nop
+
+0000000000001170 <deregister_tm_clones>:
+    1170:	48 8d 3d 41 3f 00 00 	lea    rdi,[rip+0x3f41]        # 50b8 <__TMC_END__>
+    1177:	48 8d 05 3a 3f 00 00 	lea    rax,[rip+0x3f3a]        # 50b8 <__TMC_END__>
+    117e:	48 39 f8             	cmp    rax,rdi
+    1181:	74 15                	je     1198 <deregister_tm_clones+0x28>
+    1183:	48 8b 05 46 3e 00 00 	mov    rax,QWORD PTR [rip+0x3e46]        # 4fd0 <_ITM_deregisterTMCloneTable>
+    118a:	48 85 c0             	test   rax,rax
+    118d:	74 09                	je     1198 <deregister_tm_clones+0x28>
+    118f:	ff e0                	jmp    rax
+    1191:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+    1198:	c3                   	ret    
+    1199:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+
+00000000000011a0 <register_tm_clones>:
+    11a0:	48 8d 3d 11 3f 00 00 	lea    rdi,[rip+0x3f11]        # 50b8 <__TMC_END__>
+    11a7:	48 8d 35 0a 3f 00 00 	lea    rsi,[rip+0x3f0a]        # 50b8 <__TMC_END__>
+    11ae:	48 29 fe             	sub    rsi,rdi
+    11b1:	48 c1 fe 03          	sar    rsi,0x3
+    11b5:	48 89 f0             	mov    rax,rsi
+    11b8:	48 c1 e8 3f          	shr    rax,0x3f
+    11bc:	48 01 c6             	add    rsi,rax
+    11bf:	48 d1 fe             	sar    rsi,1
+    11c2:	74 14                	je     11d8 <register_tm_clones+0x38>
+    11c4:	48 8b 05 25 3e 00 00 	mov    rax,QWORD PTR [rip+0x3e25]        # 4ff0 <_ITM_registerTMCloneTable>
+    11cb:	48 85 c0             	test   rax,rax
+    11ce:	74 08                	je     11d8 <register_tm_clones+0x38>
+    11d0:	ff e0                	jmp    rax
+    11d2:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+    11d8:	c3                   	ret    
+    11d9:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+
+00000000000011e0 <__do_global_dtors_aux>:
+    11e0:	f3 0f 1e fa          	endbr64 
+    11e4:	80 3d cd 3e 00 00 00 	cmp    BYTE PTR [rip+0x3ecd],0x0        # 50b8 <__TMC_END__>
+    11eb:	75 33                	jne    1220 <__do_global_dtors_aux+0x40>
+    11ed:	55                   	push   rbp
+    11ee:	48 83 3d 02 3e 00 00 	cmp    QWORD PTR [rip+0x3e02],0x0        # 4ff8 <__cxa_finalize@GLIBC_2.2.5>
+    11f5:	00 
+    11f6:	48 89 e5             	mov    rbp,rsp
+    11f9:	74 0d                	je     1208 <__do_global_dtors_aux+0x28>
+    11fb:	48 8b 3d a6 3e 00 00 	mov    rdi,QWORD PTR [rip+0x3ea6]        # 50a8 <__dso_handle>
+    1202:	ff 15 f0 3d 00 00    	call   QWORD PTR [rip+0x3df0]        # 4ff8 <__cxa_finalize@GLIBC_2.2.5>
+    1208:	e8 63 ff ff ff       	call   1170 <deregister_tm_clones>
+    120d:	c6 05 a4 3e 00 00 01 	mov    BYTE PTR [rip+0x3ea4],0x1        # 50b8 <__TMC_END__>
+    1214:	5d                   	pop    rbp
+    1215:	c3                   	ret    
+    1216:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    121d:	00 00 00 
+    1220:	c3                   	ret    
+    1221:	66 66 2e 0f 1f 84 00 	data16 nop WORD PTR cs:[rax+rax*1+0x0]
+    1228:	00 00 00 00 
+    122c:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000001230 <frame_dummy>:
+    1230:	f3 0f 1e fa          	endbr64 
+    1234:	e9 67 ff ff ff       	jmp    11a0 <register_tm_clones>
+    1239:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+
+0000000000001240 <printf_tab>:
+#include "lexer.h"
+
+static int tab = 0;
+
+void printf_tab(const char* fmt, ...)
+{
+    1240:	53                   	push   rbx
+    1241:	48 81 ec d0 00 00 00 	sub    rsp,0xd0
+    1248:	48 89 fb             	mov    rbx,rdi
+    124b:	84 c0                	test   al,al
+    124d:	74 31                	je     1280 <printf_tab+0x40>
+    124f:	0f 29 44 24 30       	movaps XMMWORD PTR [rsp+0x30],xmm0
+    1254:	0f 29 4c 24 40       	movaps XMMWORD PTR [rsp+0x40],xmm1
+    1259:	0f 29 54 24 50       	movaps XMMWORD PTR [rsp+0x50],xmm2
+    125e:	0f 29 5c 24 60       	movaps XMMWORD PTR [rsp+0x60],xmm3
+    1263:	0f 29 64 24 70       	movaps XMMWORD PTR [rsp+0x70],xmm4
+    1268:	0f 29 ac 24 80 00 00 	movaps XMMWORD PTR [rsp+0x80],xmm5
+    126f:	00 
+    1270:	0f 29 b4 24 90 00 00 	movaps XMMWORD PTR [rsp+0x90],xmm6
+    1277:	00 
+    1278:	0f 29 bc 24 a0 00 00 	movaps XMMWORD PTR [rsp+0xa0],xmm7
+    127f:	00 
+    1280:	4c 89 4c 24 28       	mov    QWORD PTR [rsp+0x28],r9
+    1285:	4c 89 44 24 20       	mov    QWORD PTR [rsp+0x20],r8
+    128a:	48 89 4c 24 18       	mov    QWORD PTR [rsp+0x18],rcx
+    128f:	48 89 54 24 10       	mov    QWORD PTR [rsp+0x10],rdx
+    1294:	48 89 74 24 08       	mov    QWORD PTR [rsp+0x8],rsi
+    1299:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    12a0:	00 00 
+    12a2:	48 89 84 24 c8 00 00 	mov    QWORD PTR [rsp+0xc8],rax
+    12a9:	00 
+    12aa:	48 89 e0             	mov    rax,rsp
+    va_list args;
+    va_start(args, fmt);
+    12ad:	48 89 84 24 c0 00 00 	mov    QWORD PTR [rsp+0xc0],rax
+    12b4:	00 
+    12b5:	48 8d 84 24 e0 00 00 	lea    rax,[rsp+0xe0]
+    12bc:	00 
+    12bd:	48 89 84 24 b8 00 00 	mov    QWORD PTR [rsp+0xb8],rax
+    12c4:	00 
+    12c5:	48 b8 08 00 00 00 30 	movabs rax,0x3000000008
+    12cc:	00 00 00 
+    12cf:	48 89 84 24 b0 00 00 	mov    QWORD PTR [rsp+0xb0],rax
+    12d6:	00 
+
+    printf("%*s", 2*tab, ""); // print tab spaces
+    12d7:	8b 35 df 3d 00 00    	mov    esi,DWORD PTR [rip+0x3ddf]        # 50bc <tab>
+    12dd:	01 f6                	add    esi,esi
+    12df:	48 8d 3d 2e 1d 00 00 	lea    rdi,[rip+0x1d2e]        # 3014 <_IO_stdin_used+0x14>
+    12e6:	48 8d 15 9e 1d 00 00 	lea    rdx,[rip+0x1d9e]        # 308b <_IO_stdin_used+0x8b>
+    12ed:	31 c0                	xor    eax,eax
+    12ef:	e8 bc fd ff ff       	call   10b0 <printf@plt>
+    12f4:	48 8d b4 24 b0 00 00 	lea    rsi,[rsp+0xb0]
+    12fb:	00 
+    vprintf(fmt, args);
+    12fc:	48 89 df             	mov    rdi,rbx
+    12ff:	e8 fc fd ff ff       	call   1100 <vprintf@plt>
+    1304:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    130b:	00 00 
+    130d:	48 3b 84 24 c8 00 00 	cmp    rax,QWORD PTR [rsp+0xc8]
+    1314:	00 
+    1315:	75 09                	jne    1320 <printf_tab+0xe0>
+
+    va_end(args);
+}
+    1317:	48 81 c4 d0 00 00 00 	add    rsp,0xd0
+    131e:	5b                   	pop    rbx
+    131f:	c3                   	ret    
+    1320:	e8 6b fd ff ff       	call   1090 <__stack_chk_fail@plt>
+    1325:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    132c:	00 00 00 
+    132f:	90                   	nop
+
+0000000000001330 <print_program>:
+
+void print_program(program_t *prgm)
+{
+    1330:	41 57                	push   r15
+    1332:	41 56                	push   r14
+    1334:	53                   	push   rbx
+    1335:	49 89 fe             	mov    r14,rdi
+    printf_tab("%*sProgram :\n", tab, "");
+    1338:	8b 35 7e 3d 00 00    	mov    esi,DWORD PTR [rip+0x3d7e]        # 50bc <tab>
+    133e:	48 8d 3d d3 1c 00 00 	lea    rdi,[rip+0x1cd3]        # 3018 <_IO_stdin_used+0x18>
+    1345:	48 8d 15 3f 1d 00 00 	lea    rdx,[rip+0x1d3f]        # 308b <_IO_stdin_used+0x8b>
+    134c:	31 c0                	xor    eax,eax
+    134e:	e8 ed fe ff ff       	call   1240 <printf_tab>
+    for (int i = 0; i < prgm->function_list.size; ++i)
+    1353:	41 83 3e 00          	cmp    DWORD PTR [r14],0x0
+    1357:	7e 23                	jle    137c <print_program+0x4c>
+    1359:	45 31 ff             	xor    r15d,r15d
+    135c:	31 db                	xor    ebx,ebx
+    135e:	66 90                	xchg   ax,ax
+    1360:	49 8b 7e 08          	mov    rdi,QWORD PTR [r14+0x8]
+    {
+        print_function(&prgm->function_list.ptr[i]);
+    1364:	4c 01 ff             	add    rdi,r15
+    1367:	e8 24 00 00 00       	call   1390 <print_function>
+    for (int i = 0; i < prgm->function_list.size; ++i)
+    136c:	48 83 c3 01          	add    rbx,0x1
+    1370:	49 63 06             	movsxd rax,DWORD PTR [r14]
+    1373:	49 83 c7 20          	add    r15,0x20
+    1377:	48 39 c3             	cmp    rbx,rax
+    137a:	7c e4                	jl     1360 <print_program+0x30>
+    }
+}
+    137c:	5b                   	pop    rbx
+    137d:	41 5e                	pop    r14
+    137f:	41 5f                	pop    r15
+    1381:	c3                   	ret    
+    1382:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1389:	00 00 00 
+    138c:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000001390 <print_function>:
+
+
+
+void print_function(function_t *func)
+{
+    1390:	41 57                	push   r15
+    1392:	41 56                	push   r14
+    1394:	53                   	push   rbx
+    ++tab;
+    1395:	83 05 20 3d 00 00 01 	add    DWORD PTR [rip+0x3d20],0x1        # 50bc <tab>
+    139c:	49 89 fe             	mov    r14,rdi
+
+    printf_tab("Function '%s %s()' :\n", func->type, func->name);
+    139f:	48 8b 37             	mov    rsi,QWORD PTR [rdi]
+    13a2:	48 8b 57 08          	mov    rdx,QWORD PTR [rdi+0x8]
+    13a6:	48 8d 3d 79 1c 00 00 	lea    rdi,[rip+0x1c79]        # 3026 <_IO_stdin_used+0x26>
+    13ad:	31 c0                	xor    eax,eax
+    13af:	e8 8c fe ff ff       	call   1240 <printf_tab>
+    for (int i = 0; i < func->statement_list.size; ++i)
+    13b4:	41 83 7e 10 00       	cmp    DWORD PTR [r14+0x10],0x0
+    13b9:	7e 22                	jle    13dd <print_function+0x4d>
+    13bb:	45 31 ff             	xor    r15d,r15d
+    13be:	31 db                	xor    ebx,ebx
+    13c0:	49 8b 7e 18          	mov    rdi,QWORD PTR [r14+0x18]
+    {
+        print_statement(&func->statement_list.ptr[i]);
+    13c4:	4c 01 ff             	add    rdi,r15
+    13c7:	e8 24 00 00 00       	call   13f0 <print_statement>
+    for (int i = 0; i < func->statement_list.size; ++i)
+    13cc:	48 83 c3 01          	add    rbx,0x1
+    13d0:	49 63 46 10          	movsxd rax,DWORD PTR [r14+0x10]
+    13d4:	49 83 c7 30          	add    r15,0x30
+    13d8:	48 39 c3             	cmp    rbx,rax
+    13db:	7c e3                	jl     13c0 <print_function+0x30>
+    }
+
+    --tab;
+    13dd:	83 05 d8 3c 00 00 ff 	add    DWORD PTR [rip+0x3cd8],0xffffffff        # 50bc <tab>
+}
+    13e4:	5b                   	pop    rbx
+    13e5:	41 5e                	pop    r14
+    13e7:	41 5f                	pop    r15
+    13e9:	c3                   	ret    
+    13ea:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+
+00000000000013f0 <print_statement>:
+
+void print_statement(statement_t *statement)
+{
+    ++tab;
+    13f0:	83 05 c5 3c 00 00 01 	add    DWORD PTR [rip+0x3cc5],0x1        # 50bc <tab>
+
+    if (statement->type == RETURN_STATEMENT)
+    13f7:	83 3f 00             	cmp    DWORD PTR [rdi],0x0
+    13fa:	74 08                	je     1404 <print_statement+0x14>
+    }
+    else if (statement->type == ASSIGNMENT)
+    {
+    }
+
+    --tab;
+    13fc:	83 05 b9 3c 00 00 ff 	add    DWORD PTR [rip+0x3cb9],0xffffffff        # 50bc <tab>
+}
+    1403:	c3                   	ret    
+    1404:	50                   	push   rax
+        print_return_statement(&statement->return_statement);
+    1405:	48 83 c7 08          	add    rdi,0x8
+    1409:	e8 12 00 00 00       	call   1420 <print_return_statement>
+    140e:	48 83 c4 08          	add    rsp,0x8
+    --tab;
+    1412:	83 05 a3 3c 00 00 ff 	add    DWORD PTR [rip+0x3ca3],0xffffffff        # 50bc <tab>
+}
+    1419:	c3                   	ret    
+    141a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+
+0000000000001420 <print_return_statement>:
+
+void print_return_statement(return_statement_t *statement)
+{
+    1420:	53                   	push   rbx
+    1421:	48 89 fb             	mov    rbx,rdi
+    ++tab;
+    1424:	83 05 91 3c 00 00 01 	add    DWORD PTR [rip+0x3c91],0x1        # 50bc <tab>
+
+    printf_tab("Return statement :\n");
+    142b:	48 8d 3d 0a 1c 00 00 	lea    rdi,[rip+0x1c0a]        # 303c <_IO_stdin_used+0x3c>
+    1432:	31 c0                	xor    eax,eax
+    1434:	e8 07 fe ff ff       	call   1240 <printf_tab>
+    print_expression(&statement->expr);
+    1439:	48 89 df             	mov    rdi,rbx
+    143c:	e8 0f 00 00 00       	call   1450 <print_expression>
+
+    --tab;
+    1441:	83 05 74 3c 00 00 ff 	add    DWORD PTR [rip+0x3c74],0xffffffff        # 50bc <tab>
+}
+    1448:	5b                   	pop    rbx
+    1449:	c3                   	ret    
+    144a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+
+0000000000001450 <print_expression>:
+void print_expression(expression_t *expr)
+{
+    //++tab;
+
+    //printf_tab("Expr\n");
+    if (expr->type == VALUE)
+    1450:	8b 07                	mov    eax,DWORD PTR [rdi]
+    1452:	83 f8 01             	cmp    eax,0x1
+    1455:	74 0a                	je     1461 <print_expression+0x11>
+    1457:	85 c0                	test   eax,eax
+    1459:	75 0f                	jne    146a <print_expression+0x1a>
+    {
+        print_value(&expr->value);
+    145b:	48 83 c7 08          	add    rdi,0x8
+    145f:	eb 0f                	jmp    1470 <print_value>
+    }
+    else if (expr->type == BINOP)
+    {
+        print_binop(expr->binop);
+    1461:	48 8b 7f 08          	mov    rdi,QWORD PTR [rdi+0x8]
+    1465:	e9 96 00 00 00       	jmp    1500 <print_binop>
+    }
+
+    //--tab;
+}
+    146a:	c3                   	ret    
+    146b:	0f 1f 44 00 00       	nop    DWORD PTR [rax+rax*1+0x0]
+
+0000000000001470 <print_value>:
+
+void print_value(value_t* value)
+{
+    1470:	53                   	push   rbx
+    ++tab;
+    1471:	83 05 44 3c 00 00 01 	add    DWORD PTR [rip+0x3c44],0x1        # 50bc <tab>
+
+    if (value->type == ENCLOSED)
+    1478:	8b 07                	mov    eax,DWORD PTR [rdi]
+    147a:	48 83 f8 03          	cmp    rax,0x3
+    147e:	77 6b                	ja     14eb <print_value+0x7b>
+    1480:	48 89 fb             	mov    rbx,rdi
+    1483:	48 8d 0d 7a 1b 00 00 	lea    rcx,[rip+0x1b7a]        # 3004 <_IO_stdin_used+0x4>
+    148a:	48 63 04 81          	movsxd rax,DWORD PTR [rcx+rax*4]
+    148e:	48 01 c8             	add    rax,rcx
+    1491:	ff e0                	jmp    rax
+    {
+        print_expression(value->expr);
+    1493:	48 8b 7b 08          	mov    rdi,QWORD PTR [rbx+0x8]
+    1497:	e8 b4 ff ff ff       	call   1450 <print_expression>
+    149c:	eb 4d                	jmp    14eb <print_value+0x7b>
+    }
+    else if (value->type == UNARY_OP_FACTOR)
+    {
+        printf_tab("Unary value %s\n", operators_str[value->unary_op]);
+    149e:	48 63 73 08          	movsxd rsi,DWORD PTR [rbx+0x8]
+    14a2:	48 c1 e6 02          	shl    rsi,0x2
+    14a6:	48 03 35 3b 3b 00 00 	add    rsi,QWORD PTR [rip+0x3b3b]        # 4fe8 <.got+0x18>
+    14ad:	48 8d 3d 9c 1b 00 00 	lea    rdi,[rip+0x1b9c]        # 3050 <_IO_stdin_used+0x50>
+    14b4:	31 c0                	xor    eax,eax
+    14b6:	e8 85 fd ff ff       	call   1240 <printf_tab>
+        print_value(value->unary_value);
+    14bb:	48 8b 7b 10          	mov    rdi,QWORD PTR [rbx+0x10]
+    14bf:	e8 ac ff ff ff       	call   1470 <print_value>
+    14c4:	eb 25                	jmp    14eb <print_value+0x7b>
+    }
+    else if (value->type == IDENT)
+    {
+        printf_tab("Identifier %s\n", value->ident);
+    14c6:	48 8b 73 08          	mov    rsi,QWORD PTR [rbx+0x8]
+    14ca:	48 8d 3d 8f 1b 00 00 	lea    rdi,[rip+0x1b8f]        # 3060 <_IO_stdin_used+0x60>
+    14d1:	31 c0                	xor    eax,eax
+    14d3:	e8 68 fd ff ff       	call   1240 <printf_tab>
+    14d8:	eb 11                	jmp    14eb <print_value+0x7b>
+    }
+    else if (value->type == CONSTANT)
+    {
+        printf_tab("Constant %d\n", value->constant);
+    14da:	8b 73 08             	mov    esi,DWORD PTR [rbx+0x8]
+    14dd:	48 8d 3d 8b 1b 00 00 	lea    rdi,[rip+0x1b8b]        # 306f <_IO_stdin_used+0x6f>
+    14e4:	31 c0                	xor    eax,eax
+    14e6:	e8 55 fd ff ff       	call   1240 <printf_tab>
+    }
+
+    --tab;
+    14eb:	83 05 ca 3b 00 00 ff 	add    DWORD PTR [rip+0x3bca],0xffffffff        # 50bc <tab>
+}
+    14f2:	5b                   	pop    rbx
+    14f3:	c3                   	ret    
+    14f4:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    14fb:	00 00 00 
+    14fe:	66 90                	xchg   ax,ax
+
+0000000000001500 <print_binop>:
+
+void print_binop(binop_t *binop)
+{
+    1500:	53                   	push   rbx
+    1501:	48 89 fb             	mov    rbx,rdi
+    ++tab;
+    1504:	83 05 b1 3b 00 00 01 	add    DWORD PTR [rip+0x3bb1],0x1        # 50bc <tab>
+
+    printf_tab("Binop :\n");
+    150b:	48 8d 3d 6a 1b 00 00 	lea    rdi,[rip+0x1b6a]        # 307c <_IO_stdin_used+0x7c>
+    1512:	31 c0                	xor    eax,eax
+    1514:	e8 27 fd ff ff       	call   1240 <printf_tab>
+    print_expression(&binop->left);
+    1519:	48 89 df             	mov    rdi,rbx
+    151c:	e8 2f ff ff ff       	call   1450 <print_expression>
+    printf_tab("'%s' \n", operators_str[binop->op]);
+    1521:	48 63 73 40          	movsxd rsi,DWORD PTR [rbx+0x40]
+    1525:	48 c1 e6 02          	shl    rsi,0x2
+    1529:	48 03 35 b8 3a 00 00 	add    rsi,QWORD PTR [rip+0x3ab8]        # 4fe8 <.got+0x18>
+    1530:	48 8d 3d 4e 1b 00 00 	lea    rdi,[rip+0x1b4e]        # 3085 <_IO_stdin_used+0x85>
+    1537:	31 c0                	xor    eax,eax
+    1539:	e8 02 fd ff ff       	call   1240 <printf_tab>
+    print_expression(&binop->right);
+    153e:	48 83 c3 20          	add    rbx,0x20
+    1542:	48 89 df             	mov    rdi,rbx
+    1545:	e8 06 ff ff ff       	call   1450 <print_expression>
+
+    --tab;
+    154a:	83 05 6b 3b 00 00 ff 	add    DWORD PTR [rip+0x3b6b],0xffffffff        # 50bc <tab>
+}
+    1551:	5b                   	pop    rbx
+    1552:	c3                   	ret    
+    1553:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    155a:	00 00 00 
+    155d:	0f 1f 00             	nop    DWORD PTR [rax]
+
+0000000000001560 <error>:
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+_Noreturn void error(const char *fmt, ...)
+{
+    1560:	53                   	push   rbx
+    1561:	48 81 ec d0 00 00 00 	sub    rsp,0xd0
+    1568:	48 89 fb             	mov    rbx,rdi
+    156b:	84 c0                	test   al,al
+    156d:	74 37                	je     15a6 <error+0x46>
+    156f:	0f 29 44 24 50       	movaps XMMWORD PTR [rsp+0x50],xmm0
+    1574:	0f 29 4c 24 60       	movaps XMMWORD PTR [rsp+0x60],xmm1
+    1579:	0f 29 54 24 70       	movaps XMMWORD PTR [rsp+0x70],xmm2
+    157e:	0f 29 9c 24 80 00 00 	movaps XMMWORD PTR [rsp+0x80],xmm3
+    1585:	00 
+    1586:	0f 29 a4 24 90 00 00 	movaps XMMWORD PTR [rsp+0x90],xmm4
+    158d:	00 
+    158e:	0f 29 ac 24 a0 00 00 	movaps XMMWORD PTR [rsp+0xa0],xmm5
+    1595:	00 
+    1596:	0f 29 b4 24 b0 00 00 	movaps XMMWORD PTR [rsp+0xb0],xmm6
+    159d:	00 
+    159e:	0f 29 bc 24 c0 00 00 	movaps XMMWORD PTR [rsp+0xc0],xmm7
+    15a5:	00 
+    15a6:	4c 89 4c 24 48       	mov    QWORD PTR [rsp+0x48],r9
+    15ab:	4c 89 44 24 40       	mov    QWORD PTR [rsp+0x40],r8
+    15b0:	48 89 4c 24 38       	mov    QWORD PTR [rsp+0x38],rcx
+    15b5:	48 89 54 24 30       	mov    QWORD PTR [rsp+0x30],rdx
+    15ba:	48 89 74 24 28       	mov    QWORD PTR [rsp+0x28],rsi
+    15bf:	48 8d 44 24 20       	lea    rax,[rsp+0x20]
+    va_list args;
+    va_start(args, fmt);
+    15c4:	48 89 44 24 10       	mov    QWORD PTR [rsp+0x10],rax
+    15c9:	48 8d 84 24 e0 00 00 	lea    rax,[rsp+0xe0]
+    15d0:	00 
+    15d1:	48 89 44 24 08       	mov    QWORD PTR [rsp+0x8],rax
+    15d6:	48 b8 08 00 00 00 30 	movabs rax,0x3000000008
+    15dd:	00 00 00 
+    15e0:	48 89 04 24          	mov    QWORD PTR [rsp],rax
+
+    printf("error : ");
+    15e4:	48 8d 3d a1 1a 00 00 	lea    rdi,[rip+0x1aa1]        # 308c <_IO_stdin_used+0x8c>
+    15eb:	31 c0                	xor    eax,eax
+    15ed:	e8 be fa ff ff       	call   10b0 <printf@plt>
+    15f2:	48 89 e6             	mov    rsi,rsp
+    vprintf(fmt, args);
+    15f5:	48 89 df             	mov    rdi,rbx
+    15f8:	e8 03 fb ff ff       	call   1100 <vprintf@plt>
+
+    va_end(args);
+
+    exit(1);
+    15fd:	bf 01 00 00 00       	mov    edi,0x1
+    1602:	e8 19 fb ff ff       	call   1120 <exit@plt>
+    1607:	66 0f 1f 84 00 00 00 	nop    WORD PTR [rax+rax*1+0x0]
+    160e:	00 00 
+
+0000000000001610 <warn>:
+}
+
+void warn (const char *fmt, ...)
+{
+    1610:	53                   	push   rbx
+    1611:	48 81 ec d0 00 00 00 	sub    rsp,0xd0
+    1618:	48 89 fb             	mov    rbx,rdi
+    161b:	84 c0                	test   al,al
+    161d:	74 31                	je     1650 <warn+0x40>
+    161f:	0f 29 44 24 30       	movaps XMMWORD PTR [rsp+0x30],xmm0
+    1624:	0f 29 4c 24 40       	movaps XMMWORD PTR [rsp+0x40],xmm1
+    1629:	0f 29 54 24 50       	movaps XMMWORD PTR [rsp+0x50],xmm2
+    162e:	0f 29 5c 24 60       	movaps XMMWORD PTR [rsp+0x60],xmm3
+    1633:	0f 29 64 24 70       	movaps XMMWORD PTR [rsp+0x70],xmm4
+    1638:	0f 29 ac 24 80 00 00 	movaps XMMWORD PTR [rsp+0x80],xmm5
+    163f:	00 
+    1640:	0f 29 b4 24 90 00 00 	movaps XMMWORD PTR [rsp+0x90],xmm6
+    1647:	00 
+    1648:	0f 29 bc 24 a0 00 00 	movaps XMMWORD PTR [rsp+0xa0],xmm7
+    164f:	00 
+    1650:	4c 89 4c 24 28       	mov    QWORD PTR [rsp+0x28],r9
+    1655:	4c 89 44 24 20       	mov    QWORD PTR [rsp+0x20],r8
+    165a:	48 89 4c 24 18       	mov    QWORD PTR [rsp+0x18],rcx
+    165f:	48 89 54 24 10       	mov    QWORD PTR [rsp+0x10],rdx
+    1664:	48 89 74 24 08       	mov    QWORD PTR [rsp+0x8],rsi
+    1669:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1670:	00 00 
+    1672:	48 89 84 24 c8 00 00 	mov    QWORD PTR [rsp+0xc8],rax
+    1679:	00 
+    167a:	48 89 e0             	mov    rax,rsp
+    va_list args;
+    va_start(args, fmt);
+    167d:	48 89 84 24 c0 00 00 	mov    QWORD PTR [rsp+0xc0],rax
+    1684:	00 
+    1685:	48 8d 84 24 e0 00 00 	lea    rax,[rsp+0xe0]
+    168c:	00 
+    168d:	48 89 84 24 b8 00 00 	mov    QWORD PTR [rsp+0xb8],rax
+    1694:	00 
+    1695:	48 b8 08 00 00 00 30 	movabs rax,0x3000000008
+    169c:	00 00 00 
+    169f:	48 89 84 24 b0 00 00 	mov    QWORD PTR [rsp+0xb0],rax
+    16a6:	00 
+
+    printf("warning : ");
+    16a7:	48 8d 3d e7 19 00 00 	lea    rdi,[rip+0x19e7]        # 3095 <_IO_stdin_used+0x95>
+    16ae:	31 c0                	xor    eax,eax
+    16b0:	e8 fb f9 ff ff       	call   10b0 <printf@plt>
+    16b5:	48 8d b4 24 b0 00 00 	lea    rsi,[rsp+0xb0]
+    16bc:	00 
+    vprintf(fmt, args);
+    16bd:	48 89 df             	mov    rdi,rbx
+    16c0:	e8 3b fa ff ff       	call   1100 <vprintf@plt>
+    16c5:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    16cc:	00 00 
+    16ce:	48 3b 84 24 c8 00 00 	cmp    rax,QWORD PTR [rsp+0xc8]
+    16d5:	00 
+    16d6:	75 09                	jne    16e1 <warn+0xd1>
+
+    va_end(args);
+}
+    16d8:	48 81 c4 d0 00 00 00 	add    rsp,0xd0
+    16df:	5b                   	pop    rbx
+    16e0:	c3                   	ret    
+    16e1:	e8 aa f9 ff ff       	call   1090 <__stack_chk_fail@plt>
+    16e6:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    16ed:	00 00 00 
+
+00000000000016f0 <match_operator>:
+    "++",
+    "--"
+};
+
+const char* match_operator(const char* ptr, token_t* tok)
+{
+    16f0:	41 57                	push   r15
+    16f2:	41 56                	push   r14
+    16f4:	41 55                	push   r13
+    16f6:	41 54                	push   r12
+    16f8:	53                   	push   rbx
+    16f9:	49 89 f6             	mov    r14,rsi
+    16fc:	49 89 ff             	mov    r15,rdi
+    16ff:	48 8d 1d ea 19 00 00 	lea    rbx,[rip+0x19ea]        # 30f0 <operators_str>
+    1706:	45 31 ed             	xor    r13d,r13d
+    1709:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+    for (int i = 0; i < OP_ENUM_END; ++i)
+    {
+        const int len = strlen(operators_str[i]);
+    1710:	48 89 df             	mov    rdi,rbx
+    1713:	e8 68 f9 ff ff       	call   1080 <strlen@plt>
+        if (strncmp(ptr, operators_str[i], len) == 0)
+    1718:	4c 63 e0             	movsxd r12,eax
+    171b:	4c 89 ff             	mov    rdi,r15
+    171e:	48 89 de             	mov    rsi,rbx
+    1721:	4c 89 e2             	mov    rdx,r12
+    1724:	e8 27 f9 ff ff       	call   1050 <strncmp@plt>
+    1729:	85 c0                	test   eax,eax
+    172b:	74 21                	je     174e <match_operator+0x5e>
+    for (int i = 0; i < OP_ENUM_END; ++i)
+    172d:	49 83 c5 01          	add    r13,0x1
+    1731:	48 83 c3 04          	add    rbx,0x4
+    1735:	49 83 fd 0b          	cmp    r13,0xb
+    1739:	72 d5                	jb     1710 <match_operator+0x20>
+
+            return ptr + len;
+        }
+    }
+
+    if (strncmp(ptr, "=", 1) == 0)
+    173b:	41 80 3f 3d          	cmp    BYTE PTR [r15],0x3d
+    173f:	75 1d                	jne    175e <match_operator+0x6e>
+    {
+        tok->type = ASSIGNMENT_OP;
+    1741:	41 c7 06 0a 00 00 00 	mov    DWORD PTR [r14],0xa
+        return ptr + 1;
+    1748:	49 83 c7 01          	add    r15,0x1
+    174c:	eb 13                	jmp    1761 <match_operator+0x71>
+            tok->type = OPERATOR;
+    174e:	41 c7 06 08 00 00 00 	mov    DWORD PTR [r14],0x8
+            tok->data.op = (operator_type_t)i;
+    1755:	45 89 6e 08          	mov    DWORD PTR [r14+0x8],r13d
+            return ptr + len;
+    1759:	4d 01 e7             	add    r15,r12
+    175c:	eb 03                	jmp    1761 <match_operator+0x71>
+    175e:	45 31 ff             	xor    r15d,r15d
+    }
+
+    return NULL;
+}
+    1761:	4c 89 f8             	mov    rax,r15
+    1764:	5b                   	pop    rbx
+    1765:	41 5c                	pop    r12
+    1767:	41 5d                	pop    r13
+    1769:	41 5e                	pop    r14
+    176b:	41 5f                	pop    r15
+    176d:	c3                   	ret    
+    176e:	66 90                	xchg   ax,ax
+
+0000000000001770 <match_keyword>:
+
+const char* match_keyword(const char* ptr, token_t* tok)
+{
+    1770:	41 56                	push   r14
+    1772:	53                   	push   rbx
+    1773:	50                   	push   rax
+    1774:	49 89 f6             	mov    r14,rsi
+    1777:	48 89 fb             	mov    rbx,rdi
+    if (strncmp(ptr, "if", 2) == 0 && !isalnum(ptr[2]))
+    177a:	48 8d 35 9b 19 00 00 	lea    rsi,[rip+0x199b]        # 311c <operators_str+0x2c>
+    1781:	ba 02 00 00 00       	mov    edx,0x2
+    1786:	e8 c5 f8 ff ff       	call   1050 <strncmp@plt>
+    178b:	85 c0                	test   eax,eax
+    178d:	75 23                	jne    17b2 <match_keyword+0x42>
+    178f:	e8 9c f9 ff ff       	call   1130 <__ctype_b_loc@plt>
+    1794:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    1797:	48 0f be 4b 02       	movsx  rcx,BYTE PTR [rbx+0x2]
+    179c:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    17a0:	75 10                	jne    17b2 <match_keyword+0x42>
+    17a2:	48 83 c3 02          	add    rbx,0x2
+    {
+        tok->type = KEYWORD_IF;
+    17a6:	41 c7 06 01 00 00 00 	mov    DWORD PTR [r14],0x1
+    17ad:	e9 20 01 00 00       	jmp    18d2 <match_keyword+0x162>
+        return ptr + 2;
+    }
+    if (strncmp(ptr, "do", 2) == 0 && !isalnum(ptr[2]))
+    17b2:	48 8d 35 66 19 00 00 	lea    rsi,[rip+0x1966]        # 311f <operators_str+0x2f>
+    17b9:	ba 02 00 00 00       	mov    edx,0x2
+    17be:	48 89 df             	mov    rdi,rbx
+    17c1:	e8 8a f8 ff ff       	call   1050 <strncmp@plt>
+    17c6:	85 c0                	test   eax,eax
+    17c8:	75 23                	jne    17ed <match_keyword+0x7d>
+    17ca:	e8 61 f9 ff ff       	call   1130 <__ctype_b_loc@plt>
+    17cf:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    17d2:	48 0f be 4b 02       	movsx  rcx,BYTE PTR [rbx+0x2]
+    17d7:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    17db:	75 10                	jne    17ed <match_keyword+0x7d>
+    17dd:	48 83 c3 02          	add    rbx,0x2
+    {
+        tok->type = KEYWORD_DO;
+    17e1:	41 c7 06 04 00 00 00 	mov    DWORD PTR [r14],0x4
+    17e8:	e9 e5 00 00 00       	jmp    18d2 <match_keyword+0x162>
+        return ptr + 2;
+    }
+    if (strncmp(ptr, "for", 3) == 0 && !isalnum(ptr[3]))
+    17ed:	48 8d 35 2e 19 00 00 	lea    rsi,[rip+0x192e]        # 3122 <operators_str+0x32>
+    17f4:	ba 03 00 00 00       	mov    edx,0x3
+    17f9:	48 89 df             	mov    rdi,rbx
+    17fc:	e8 4f f8 ff ff       	call   1050 <strncmp@plt>
+    1801:	85 c0                	test   eax,eax
+    1803:	75 23                	jne    1828 <match_keyword+0xb8>
+    1805:	e8 26 f9 ff ff       	call   1130 <__ctype_b_loc@plt>
+    180a:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    180d:	48 0f be 4b 03       	movsx  rcx,BYTE PTR [rbx+0x3]
+    1812:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    1816:	75 10                	jne    1828 <match_keyword+0xb8>
+    1818:	48 83 c3 03          	add    rbx,0x3
+    {
+        tok->type = KEYWORD_FOR;
+    181c:	41 c7 06 05 00 00 00 	mov    DWORD PTR [r14],0x5
+    1823:	e9 aa 00 00 00       	jmp    18d2 <match_keyword+0x162>
+        return ptr + 3;
+    }
+    if (strncmp(ptr, "else", 4) == 0 && !isalnum(ptr[4]))
+    1828:	48 8d 35 f7 18 00 00 	lea    rsi,[rip+0x18f7]        # 3126 <operators_str+0x36>
+    182f:	ba 04 00 00 00       	mov    edx,0x4
+    1834:	48 89 df             	mov    rdi,rbx
+    1837:	e8 14 f8 ff ff       	call   1050 <strncmp@plt>
+    183c:	85 c0                	test   eax,eax
+    183e:	75 20                	jne    1860 <match_keyword+0xf0>
+    1840:	e8 eb f8 ff ff       	call   1130 <__ctype_b_loc@plt>
+    1845:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    1848:	48 0f be 4b 04       	movsx  rcx,BYTE PTR [rbx+0x4]
+    184d:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    1851:	75 0d                	jne    1860 <match_keyword+0xf0>
+    1853:	48 83 c3 04          	add    rbx,0x4
+    {
+        tok->type = KEYWORD_ELSE;
+    1857:	41 c7 06 02 00 00 00 	mov    DWORD PTR [r14],0x2
+    185e:	eb 72                	jmp    18d2 <match_keyword+0x162>
+        return ptr + 4;
+    }
+    if (strncmp(ptr, "while", 5) == 0 && !isalnum(ptr[5]))
+    1860:	48 8d 35 c4 18 00 00 	lea    rsi,[rip+0x18c4]        # 312b <operators_str+0x3b>
+    1867:	ba 05 00 00 00       	mov    edx,0x5
+    186c:	48 89 df             	mov    rdi,rbx
+    186f:	e8 dc f7 ff ff       	call   1050 <strncmp@plt>
+    1874:	85 c0                	test   eax,eax
+    1876:	75 20                	jne    1898 <match_keyword+0x128>
+    1878:	e8 b3 f8 ff ff       	call   1130 <__ctype_b_loc@plt>
+    187d:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    1880:	48 0f be 4b 05       	movsx  rcx,BYTE PTR [rbx+0x5]
+    1885:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    1889:	75 0d                	jne    1898 <match_keyword+0x128>
+    188b:	48 83 c3 05          	add    rbx,0x5
+    {
+        tok->type = KEYWORD_WHILE;
+    188f:	41 c7 06 03 00 00 00 	mov    DWORD PTR [r14],0x3
+    1896:	eb 3a                	jmp    18d2 <match_keyword+0x162>
+        return ptr + 5;
+    }
+    if (strncmp(ptr, "return", 6) == 0 && !isalnum(ptr[6]))
+    1898:	48 8d 35 92 18 00 00 	lea    rsi,[rip+0x1892]        # 3131 <operators_str+0x41>
+    189f:	ba 06 00 00 00       	mov    edx,0x6
+    18a4:	48 89 df             	mov    rdi,rbx
+    18a7:	e8 a4 f7 ff ff       	call   1050 <strncmp@plt>
+    18ac:	85 c0                	test   eax,eax
+    18ae:	75 20                	jne    18d0 <match_keyword+0x160>
+    18b0:	e8 7b f8 ff ff       	call   1130 <__ctype_b_loc@plt>
+    18b5:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    18b8:	48 0f be 4b 06       	movsx  rcx,BYTE PTR [rbx+0x6]
+    18bd:	f6 04 48 08          	test   BYTE PTR [rax+rcx*2],0x8
+    18c1:	75 0d                	jne    18d0 <match_keyword+0x160>
+    18c3:	48 83 c3 06          	add    rbx,0x6
+    {
+        tok->type = KEYWORD_RETURN;
+    18c7:	41 c7 06 06 00 00 00 	mov    DWORD PTR [r14],0x6
+    18ce:	eb 02                	jmp    18d2 <match_keyword+0x162>
+    18d0:	31 db                	xor    ebx,ebx
+        return ptr + 6;
+    }
+
+    return NULL;
+}
+    18d2:	48 89 d8             	mov    rax,rbx
+    18d5:	48 83 c4 08          	add    rsp,0x8
+    18d9:	5b                   	pop    rbx
+    18da:	41 5e                	pop    r14
+    18dc:	c3                   	ret    
+    18dd:	0f 1f 00             	nop    DWORD PTR [rax]
+
+00000000000018e0 <match_identifier>:
+
+const char* match_identifier(const char* ptr, token_t* tok)
+{
+    18e0:	41 57                	push   r15
+    18e2:	41 56                	push   r14
+    18e4:	41 54                	push   r12
+    18e6:	53                   	push   rbx
+    18e7:	50                   	push   rax
+    18e8:	49 89 f6             	mov    r14,rsi
+    18eb:	49 89 ff             	mov    r15,rdi
+    const char* first_char = ptr;
+    int ident_len = 0;
+
+    // first character must be [a-zA-Z_]
+    if (!isalpha(*first_char) && *first_char != '_')
+    18ee:	e8 3d f8 ff ff       	call   1130 <__ctype_b_loc@plt>
+    18f3:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    18f6:	49 0f be 0f          	movsx  rcx,BYTE PTR [r15]
+    18fa:	48 83 f9 5f          	cmp    rcx,0x5f
+    18fe:	74 13                	je     1913 <match_identifier+0x33>
+    1900:	0f b7 0c 48          	movzx  ecx,WORD PTR [rax+rcx*2]
+    1904:	81 e1 00 04 00 00    	and    ecx,0x400
+    190a:	66 85 c9             	test   cx,cx
+    190d:	75 04                	jne    1913 <match_identifier+0x33>
+    190f:	31 c0                	xor    eax,eax
+    1911:	eb 5b                	jmp    196e <match_identifier+0x8e>
+    1913:	31 db                	xor    ebx,ebx
+    1915:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    191c:	00 00 00 
+    191f:	90                   	nop
+    {
+        return NULL;
+    }
+
+    while (isalnum(*ptr) || *ptr == '_')
+    1920:	49 0f be 14 1f       	movsx  rdx,BYTE PTR [r15+rbx*1]
+    1925:	0f b7 0c 50          	movzx  ecx,WORD PTR [rax+rdx*2]
+    1929:	83 e1 08             	and    ecx,0x8
+    192c:	48 83 c3 01          	add    rbx,0x1
+    1930:	48 83 fa 5f          	cmp    rdx,0x5f
+    1934:	74 ea                	je     1920 <match_identifier+0x40>
+    1936:	66 85 c9             	test   cx,cx
+    1939:	75 e5                	jne    1920 <match_identifier+0x40>
+    {
+        ++ident_len;
+        ++ptr;
+    }
+
+    char* token_ident_str = (char*)malloc(ident_len+1);
+    193b:	48 89 df             	mov    rdi,rbx
+    193e:	e8 ad f7 ff ff       	call   10f0 <malloc@plt>
+    1943:	49 89 c4             	mov    r12,rax
+    memcpy(token_ident_str, first_char, ident_len);
+    1946:	48 8d 53 ff          	lea    rdx,[rbx-0x1]
+    194a:	48 89 c7             	mov    rdi,rax
+    194d:	4c 89 fe             	mov    rsi,r15
+    1950:	e8 8b f7 ff ff       	call   10e0 <memcpy@plt>
+    token_ident_str[ident_len] = '\0';
+    1955:	41 c6 44 1c ff 00    	mov    BYTE PTR [r12+rbx*1-0x1],0x0
+
+    tok->type = IDENTIFIER;
+    195b:	41 c7 06 07 00 00 00 	mov    DWORD PTR [r14],0x7
+    tok->data.str = token_ident_str;
+    1962:	4d 89 66 08          	mov    QWORD PTR [r14+0x8],r12
+    1966:	49 8d 04 1f          	lea    rax,[r15+rbx*1]
+    196a:	48 83 c0 ff          	add    rax,0xffffffffffffffff
+
+    return ptr;
+}
+    196e:	48 83 c4 08          	add    rsp,0x8
+    1972:	5b                   	pop    rbx
+    1973:	41 5c                	pop    r12
+    1975:	41 5e                	pop    r14
+    1977:	41 5f                	pop    r15
+    1979:	c3                   	ret    
+    197a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+
+0000000000001980 <match_number_literal>:
+
+const char* match_number_literal(const char* ptr, token_t* tok)
+{
+    1980:	41 57                	push   r15
+    1982:	41 56                	push   r14
+    1984:	41 55                	push   r13
+    1986:	41 54                	push   r12
+    1988:	53                   	push   rbx
+    1989:	48 83 ec 10          	sub    rsp,0x10
+    198d:	49 89 f6             	mov    r14,rsi
+    1990:	49 89 ff             	mov    r15,rdi
+    1993:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    199a:	00 00 
+    199c:	48 89 44 24 08       	mov    QWORD PTR [rsp+0x8],rax
+    int literal_len = 0;
+    int is_float = 0;
+
+    // TODO : support hex numbers
+
+    while (isdigit(*ptr))
+    19a1:	e8 8a f7 ff ff       	call   1130 <__ctype_b_loc@plt>
+    19a6:	48 8b 00             	mov    rax,QWORD PTR [rax]
+    19a9:	4c 89 f9             	mov    rcx,r15
+    19ac:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+    19b0:	4c 0f be 29          	movsx  r13,BYTE PTR [rcx]
+    {
+        ++literal_len;
+        ++ptr;
+    19b4:	48 83 c1 01          	add    rcx,0x1
+    while (isdigit(*ptr))
+    19b8:	42 f6 44 68 01 08    	test   BYTE PTR [rax+r13*2+0x1],0x8
+    19be:	75 f0                	jne    19b0 <match_number_literal+0x30>
+    }
+    if (*ptr == '.')
+    19c0:	48 8d 59 ff          	lea    rbx,[rcx-0x1]
+    19c4:	41 80 fd 2e          	cmp    r13b,0x2e
+    19c8:	48 0f 44 d9          	cmove  rbx,rcx
+    {
+        is_float = 1;
+        ++literal_len;
+        ++ptr;
+    }
+    while (isdigit(*ptr))
+    19cc:	48 83 c3 ff          	add    rbx,0xffffffffffffffff
+    19d0:	48 0f be 4b 01       	movsx  rcx,BYTE PTR [rbx+0x1]
+    19d5:	48 83 c3 01          	add    rbx,0x1
+    19d9:	f6 44 48 01 08       	test   BYTE PTR [rax+rcx*2+0x1],0x8
+    19de:	75 f0                	jne    19d0 <match_number_literal+0x50>
+        ++literal_len;
+        ++ptr;
+    }
+
+    // no digits found
+    if (ptr == start)
+    19e0:	49 39 df             	cmp    r15,rbx
+    19e3:	74 41                	je     1a26 <match_number_literal+0xa6>
+        return NULL;
+
+    errno = 0;
+    19e5:	e8 56 f6 ff ff       	call   1040 <__errno_location@plt>
+    19ea:	49 89 c4             	mov    r12,rax
+    19ed:	c7 00 00 00 00 00    	mov    DWORD PTR [rax],0x0
+    if (*ptr == '.')
+    19f3:	41 80 fd 2e          	cmp    r13b,0x2e
+
+    if (!is_float)
+    19f7:	75 31                	jne    1a2a <match_number_literal+0xaa>
+
+        return ptr;
+    }
+    else
+    {
+        char* endptr = NULL;
+    19f9:	48 c7 04 24 00 00 00 	mov    QWORD PTR [rsp],0x0
+    1a00:	00 
+    1a01:	48 89 e6             	mov    rsi,rsp
+        double number = strtod(start, &endptr);
+    1a04:	4c 89 ff             	mov    rdi,r15
+    1a07:	e8 64 f6 ff ff       	call   1070 <strtod@plt>
+        assert(errno == 0); // FIXME !!!
+    1a0c:	41 83 3c 24 00       	cmp    DWORD PTR [r12],0x0
+    1a11:	75 64                	jne    1a77 <match_number_literal+0xf7>
+
+        tok->type = FLOAT_LITERAL;
+    1a13:	41 c7 06 0c 00 00 00 	mov    DWORD PTR [r14],0xc
+        tok->data.fp = number;
+    1a1a:	f2 0f 5a c0          	cvtsd2ss xmm0,xmm0
+    1a1e:	f3 41 0f 11 46 08    	movss  DWORD PTR [r14+0x8],xmm0
+    1a24:	eb 2b                	jmp    1a51 <match_number_literal+0xd1>
+    1a26:	31 db                	xor    ebx,ebx
+    1a28:	eb 27                	jmp    1a51 <match_number_literal+0xd1>
+        char* endptr = NULL;
+    1a2a:	48 c7 04 24 00 00 00 	mov    QWORD PTR [rsp],0x0
+    1a31:	00 
+    1a32:	48 89 e6             	mov    rsi,rsp
+        int number = strtol(start, &endptr, 0);
+    1a35:	4c 89 ff             	mov    rdi,r15
+    1a38:	31 d2                	xor    edx,edx
+    1a3a:	e8 91 f6 ff ff       	call   10d0 <strtol@plt>
+        assert(errno == 0); // FIXME !!!
+    1a3f:	41 83 3c 24 00       	cmp    DWORD PTR [r12],0x0
+    1a44:	75 50                	jne    1a96 <match_number_literal+0x116>
+        tok->type = INTEGER_LITERAL;
+    1a46:	41 c7 06 0b 00 00 00 	mov    DWORD PTR [r14],0xb
+        tok->data.integer = number;
+    1a4d:	41 89 46 08          	mov    DWORD PTR [r14+0x8],eax
+    1a51:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1a58:	00 00 
+    1a5a:	48 3b 44 24 08       	cmp    rax,QWORD PTR [rsp+0x8]
+    1a5f:	75 11                	jne    1a72 <match_number_literal+0xf2>
+
+        return ptr;
+    }
+}
+    1a61:	48 89 d8             	mov    rax,rbx
+    1a64:	48 83 c4 10          	add    rsp,0x10
+    1a68:	5b                   	pop    rbx
+    1a69:	41 5c                	pop    r12
+    1a6b:	41 5d                	pop    r13
+    1a6d:	41 5e                	pop    r14
+    1a6f:	41 5f                	pop    r15
+    1a71:	c3                   	ret    
+    1a72:	e8 19 f6 ff ff       	call   1090 <__stack_chk_fail@plt>
+        assert(errno == 0); // FIXME !!!
+    1a77:	48 8d 3d ba 16 00 00 	lea    rdi,[rip+0x16ba]        # 3138 <operators_str+0x48>
+    1a7e:	48 8d 35 be 16 00 00 	lea    rsi,[rip+0x16be]        # 3143 <operators_str+0x53>
+    1a85:	48 8d 0d e7 16 00 00 	lea    rcx,[rip+0x16e7]        # 3173 <operators_str+0x83>
+    1a8c:	ba b7 00 00 00       	mov    edx,0xb7
+    1a91:	e8 2a f6 ff ff       	call   10c0 <__assert_fail@plt>
+        assert(errno == 0); // FIXME !!!
+    1a96:	48 8d 3d 9b 16 00 00 	lea    rdi,[rip+0x169b]        # 3138 <operators_str+0x48>
+    1a9d:	48 8d 35 9f 16 00 00 	lea    rsi,[rip+0x169f]        # 3143 <operators_str+0x53>
+    1aa4:	48 8d 0d c8 16 00 00 	lea    rcx,[rip+0x16c8]        # 3173 <operators_str+0x83>
+    1aab:	ba ac 00 00 00       	mov    edx,0xac
+    1ab0:	e8 0b f6 ff ff       	call   10c0 <__assert_fail@plt>
+    1ab5:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1abc:	00 00 00 
+    1abf:	90                   	nop
+
+0000000000001ac0 <match_string_literal>:
+
+const char* match_string_literal(const char* ptr, token_t* tok)
+{
+    1ac0:	41 57                	push   r15
+    1ac2:	41 56                	push   r14
+    1ac4:	41 55                	push   r13
+    1ac6:	41 54                	push   r12
+    1ac8:	53                   	push   rbx
+    if (*ptr != '"')
+    1ac9:	80 3f 22             	cmp    BYTE PTR [rdi],0x22
+    1acc:	75 6c                	jne    1b3a <match_string_literal+0x7a>
+    1ace:	49 89 f6             	mov    r14,rsi
+    1ad1:	48 89 fb             	mov    rbx,rdi
+        return NULL;
+
+    ++ptr;
+    1ad4:	48 83 c3 01          	add    rbx,0x1
+    const char* literal_start = ptr;
+    const char* literal_end   = strchr(ptr, '"');
+    1ad8:	48 89 df             	mov    rdi,rbx
+    1adb:	be 22 00 00 00       	mov    esi,0x22
+    1ae0:	e8 bb f5 ff ff       	call   10a0 <strchr@plt>
+    if (literal_end == NULL)
+    1ae5:	48 85 c0             	test   rax,rax
+    1ae8:	74 50                	je     1b3a <match_string_literal+0x7a>
+    1aea:	49 89 c7             	mov    r15,rax
+        return NULL;
+    int literal_len = literal_end - literal_start;
+    1aed:	49 89 c5             	mov    r13,rax
+    1af0:	49 29 dd             	sub    r13,rbx
+
+    char* tok_str = (char*)malloc(literal_len+1);
+    1af3:	4c 89 e8             	mov    rax,r13
+    1af6:	48 c1 e0 20          	shl    rax,0x20
+    1afa:	48 bf 00 00 00 00 01 	movabs rdi,0x100000000
+    1b01:	00 00 00 
+    1b04:	48 01 c7             	add    rdi,rax
+    1b07:	48 c1 ff 20          	sar    rdi,0x20
+    1b0b:	e8 e0 f5 ff ff       	call   10f0 <malloc@plt>
+    1b10:	49 89 c4             	mov    r12,rax
+
+    memcpy(tok_str, literal_start, literal_len);
+    1b13:	4d 63 ed             	movsxd r13,r13d
+    1b16:	48 89 c7             	mov    rdi,rax
+    1b19:	48 89 de             	mov    rsi,rbx
+    1b1c:	4c 89 ea             	mov    rdx,r13
+    1b1f:	e8 bc f5 ff ff       	call   10e0 <memcpy@plt>
+    tok_str[literal_len] = '\0';
+    1b24:	43 c6 04 2c 00       	mov    BYTE PTR [r12+r13*1],0x0
+
+    tok->type = STRING_LITERAL;
+    1b29:	41 c7 06 0d 00 00 00 	mov    DWORD PTR [r14],0xd
+    tok->data.str = tok_str;
+    1b30:	4d 89 66 08          	mov    QWORD PTR [r14+0x8],r12
+
+    ptr = literal_end + 1;
+    1b34:	49 83 c7 01          	add    r15,0x1
+    1b38:	eb 03                	jmp    1b3d <match_string_literal+0x7d>
+    1b3a:	45 31 ff             	xor    r15d,r15d
+
+    return ptr;
+}
+    1b3d:	4c 89 f8             	mov    rax,r15
+    1b40:	5b                   	pop    rbx
+    1b41:	41 5c                	pop    r12
+    1b43:	41 5d                	pop    r13
+    1b45:	41 5e                	pop    r14
+    1b47:	41 5f                	pop    r15
+    1b49:	c3                   	ret    
+    1b4a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+
+0000000000001b50 <match_delimiter>:
+
+const char* match_delimiter(const char* ptr, token_t* tok)
+{
+    if (strncmp(ptr, "(", 1) == 0)
+    1b50:	8a 0f                	mov    cl,BYTE PTR [rdi]
+    1b52:	31 c0                	xor    eax,eax
+    1b54:	8d 51 d8             	lea    edx,[rcx-0x28]
+    1b57:	80 fa 13             	cmp    dl,0x13
+    1b5a:	77 1f                	ja     1b7b <match_delimiter+0x2b>
+    1b5c:	b9 0e 00 00 00       	mov    ecx,0xe
+    1b61:	0f b6 d2             	movzx  edx,dl
+    1b64:	4c 8d 05 35 15 00 00 	lea    r8,[rip+0x1535]        # 30a0 <_IO_stdin_used+0xa0>
+    1b6b:	49 63 14 90          	movsxd rdx,DWORD PTR [r8+rdx*4]
+    1b6f:	4c 01 c2             	add    rdx,r8
+    1b72:	ff e2                	jmp    rdx
+    1b74:	b9 0f 00 00 00       	mov    ecx,0xf
+    1b79:	eb 24                	jmp    1b9f <match_delimiter+0x4f>
+    1b7b:	80 f9 7b             	cmp    cl,0x7b
+    1b7e:	74 1a                	je     1b9a <match_delimiter+0x4a>
+    1b80:	80 f9 7d             	cmp    cl,0x7d
+    1b83:	75 23                	jne    1ba8 <match_delimiter+0x58>
+    1b85:	b9 11 00 00 00       	mov    ecx,0x11
+    1b8a:	eb 13                	jmp    1b9f <match_delimiter+0x4f>
+    1b8c:	b9 12 00 00 00       	mov    ecx,0x12
+    1b91:	eb 0c                	jmp    1b9f <match_delimiter+0x4f>
+    1b93:	b9 13 00 00 00       	mov    ecx,0x13
+    1b98:	eb 05                	jmp    1b9f <match_delimiter+0x4f>
+    1b9a:	b9 10 00 00 00       	mov    ecx,0x10
+    1b9f:	89 0e                	mov    DWORD PTR [rsi],ecx
+    1ba1:	48 83 c7 01          	add    rdi,0x1
+    1ba5:	48 89 f8             	mov    rax,rdi
+        tok->type = SEMICOLON;
+        return ptr + 1;
+    }
+
+    return NULL;
+}
+    1ba8:	c3                   	ret    
+    1ba9:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+
+0000000000001bb0 <tokenize_program>:
+
+token_t *tokenize_program(const char *source)
+{
+    1bb0:	55                   	push   rbp
+    1bb1:	41 57                	push   r15
+    1bb3:	41 56                	push   r14
+    1bb5:	41 55                	push   r13
+    1bb7:	41 54                	push   r12
+    1bb9:	53                   	push   rbx
+    1bba:	48 83 ec 38          	sub    rsp,0x38
+    1bbe:	49 89 fd             	mov    r13,rdi
+    1bc1:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1bc8:	00 00 
+    1bca:	48 89 44 24 30       	mov    QWORD PTR [rsp+0x30],rax
+    DYNARRAY(token_t) tokens;
+    DYNARRAY_INIT(tokens, 1024);
+    1bcf:	bf 00 40 00 00       	mov    edi,0x4000
+    1bd4:	e8 17 f5 ff ff       	call   10f0 <malloc@plt>
+    1bd9:	49 89 c4             	mov    r12,rax
+
+    const char* ptr = source;
+    int current_line = 0;
+
+    while (*ptr)
+    1bdc:	45 8a 75 00          	mov    r14b,BYTE PTR [r13+0x0]
+    1be0:	bd 00 04 00 00       	mov    ebp,0x400
+    1be5:	45 84 f6             	test   r14b,r14b
+    1be8:	0f 84 12 01 00 00    	je     1d00 <tokenize_program+0x150>
+    1bee:	45 31 ff             	xor    r15d,r15d
+            ++current_line;
+            ++ptr;
+        }
+
+        // skip all whitespace
+        while (isspace(*ptr))
+    1bf1:	e8 3a f5 ff ff       	call   1130 <__ctype_b_loc@plt>
+    1bf6:	48 89 44 24 08       	mov    QWORD PTR [rsp+0x8],rax
+    1bfb:	0f 1f 44 00 00       	nop    DWORD PTR [rax+rax*1+0x0]
+    1c00:	89 6c 24 04          	mov    DWORD PTR [rsp+0x4],ebp
+        while (*ptr == '\n')
+    1c04:	41 80 fe 0a          	cmp    r14b,0xa
+    1c08:	75 11                	jne    1c1b <tokenize_program+0x6b>
+    1c0a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+    1c10:	41 80 7d 01 0a       	cmp    BYTE PTR [r13+0x1],0xa
+            ++ptr;
+    1c15:	4d 8d 6d 01          	lea    r13,[r13+0x1]
+        while (*ptr == '\n')
+    1c19:	74 f5                	je     1c10 <tokenize_program+0x60>
+    1c1b:	48 8b 44 24 08       	mov    rax,QWORD PTR [rsp+0x8]
+    1c20:	48 8b 00             	mov    rax,QWORD PTR [rax]
+        while (isspace(*ptr))
+    1c23:	49 83 c5 ff          	add    r13,0xffffffffffffffff
+    1c27:	4c 89 eb             	mov    rbx,r13
+    1c2a:	48 8d 6c 24 20       	lea    rbp,[rsp+0x20]
+    1c2f:	90                   	nop
+    1c30:	48 0f be 4b 01       	movsx  rcx,BYTE PTR [rbx+0x1]
+    1c35:	48 83 c3 01          	add    rbx,0x1
+    1c39:	f6 44 48 01 20       	test   BYTE PTR [rax+rcx*2+0x1],0x20
+    1c3e:	75 f0                	jne    1c30 <tokenize_program+0x80>
+            ++ptr;
+
+        token_t token;
+
+        const char* next;
+        if ((next = match_keyword(ptr, &token))        ||
+    1c40:	48 89 df             	mov    rdi,rbx
+    1c43:	48 89 ee             	mov    rsi,rbp
+    1c46:	e8 25 fb ff ff       	call   1770 <match_keyword>
+    1c4b:	49 89 c5             	mov    r13,rax
+    1c4e:	48 85 c0             	test   rax,rax
+    1c51:	75 6d                	jne    1cc0 <tokenize_program+0x110>
+            (next = match_operator(ptr, &token))       ||
+    1c53:	48 89 df             	mov    rdi,rbx
+    1c56:	48 89 ee             	mov    rsi,rbp
+    1c59:	e8 92 fa ff ff       	call   16f0 <match_operator>
+    1c5e:	49 89 c5             	mov    r13,rax
+    1c61:	48 85 c0             	test   rax,rax
+    1c64:	75 5a                	jne    1cc0 <tokenize_program+0x110>
+            (next = match_delimiter(ptr, &token))      ||
+    1c66:	48 89 df             	mov    rdi,rbx
+    1c69:	48 89 ee             	mov    rsi,rbp
+    1c6c:	e8 df fe ff ff       	call   1b50 <match_delimiter>
+    1c71:	49 89 c5             	mov    r13,rax
+    1c74:	48 85 c0             	test   rax,rax
+    1c77:	75 47                	jne    1cc0 <tokenize_program+0x110>
+            (next = match_number_literal(ptr, &token)) ||
+    1c79:	48 89 df             	mov    rdi,rbx
+    1c7c:	48 89 ee             	mov    rsi,rbp
+    1c7f:	e8 fc fc ff ff       	call   1980 <match_number_literal>
+    1c84:	49 89 c5             	mov    r13,rax
+    1c87:	48 85 c0             	test   rax,rax
+    1c8a:	75 34                	jne    1cc0 <tokenize_program+0x110>
+            (next = match_string_literal(ptr, &token)) ||
+    1c8c:	48 89 df             	mov    rdi,rbx
+    1c8f:	48 89 ee             	mov    rsi,rbp
+    1c92:	e8 29 fe ff ff       	call   1ac0 <match_string_literal>
+    1c97:	49 89 c5             	mov    r13,rax
+    1c9a:	48 85 c0             	test   rax,rax
+    1c9d:	75 21                	jne    1cc0 <tokenize_program+0x110>
+            (next = match_identifier(ptr, &token))       )
+    1c9f:	48 89 df             	mov    rdi,rbx
+    1ca2:	48 89 ee             	mov    rsi,rbp
+    1ca5:	e8 36 fc ff ff       	call   18e0 <match_identifier>
+    1caa:	49 89 c5             	mov    r13,rax
+    1cad:	48 85 c0             	test   rax,rax
+        if ((next = match_keyword(ptr, &token))        ||
+    1cb0:	0f 84 bc 00 00 00    	je     1d72 <tokenize_program+0x1c2>
+    1cb6:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1cbd:	00 00 00 
+        {
+            DYNARRAY_ADD(tokens, token);
+    1cc0:	49 8d 5f 01          	lea    rbx,[r15+0x1]
+    1cc4:	8b 6c 24 04          	mov    ebp,DWORD PTR [rsp+0x4]
+    1cc8:	39 dd                	cmp    ebp,ebx
+    1cca:	7f 14                	jg     1ce0 <tokenize_program+0x130>
+    1ccc:	01 ed                	add    ebp,ebp
+    1cce:	48 63 f5             	movsxd rsi,ebp
+    1cd1:	48 c1 e6 04          	shl    rsi,0x4
+    1cd5:	4c 89 e7             	mov    rdi,r12
+    1cd8:	e8 33 f4 ff ff       	call   1110 <realloc@plt>
+    1cdd:	49 89 c4             	mov    r12,rax
+    1ce0:	49 c1 e7 04          	shl    r15,0x4
+    1ce4:	0f 10 44 24 20       	movups xmm0,XMMWORD PTR [rsp+0x20]
+    1ce9:	43 0f 11 04 3c       	movups XMMWORD PTR [r12+r15*1],xmm0
+    while (*ptr)
+    1cee:	45 8a 75 00          	mov    r14b,BYTE PTR [r13+0x0]
+    1cf2:	49 89 df             	mov    r15,rbx
+    1cf5:	45 84 f6             	test   r14b,r14b
+    1cf8:	0f 85 02 ff ff ff    	jne    1c00 <tokenize_program+0x50>
+    1cfe:	eb 02                	jmp    1d02 <tokenize_program+0x152>
+    1d00:	31 db                	xor    ebx,ebx
+        }
+    }
+
+    token_t eof;
+    eof.type = TOKEN_EOF;
+    DYNARRAY_ADD(tokens, eof);
+    1d02:	8d 43 01             	lea    eax,[rbx+0x1]
+    1d05:	39 e8                	cmp    eax,ebp
+    1d07:	7c 14                	jl     1d1d <tokenize_program+0x16d>
+    1d09:	01 ed                	add    ebp,ebp
+    1d0b:	48 63 f5             	movsxd rsi,ebp
+    1d0e:	48 c1 e6 04          	shl    rsi,0x4
+    1d12:	4c 89 e7             	mov    rdi,r12
+    1d15:	e8 f6 f3 ff ff       	call   1110 <realloc@plt>
+    1d1a:	49 89 c4             	mov    r12,rax
+    1d1d:	8b 44 24 28          	mov    eax,DWORD PTR [rsp+0x28]
+    1d21:	89 44 24 18          	mov    DWORD PTR [rsp+0x18],eax
+    1d25:	48 8b 44 24 20       	mov    rax,QWORD PTR [rsp+0x20]
+    1d2a:	48 89 44 24 10       	mov    QWORD PTR [rsp+0x10],rax
+    1d2f:	89 d8                	mov    eax,ebx
+    1d31:	48 c1 e0 04          	shl    rax,0x4
+    1d35:	41 c7 04 04 00 00 00 	mov    DWORD PTR [r12+rax*1],0x0
+    1d3c:	00 
+    1d3d:	8b 4c 24 18          	mov    ecx,DWORD PTR [rsp+0x18]
+    1d41:	41 89 4c 04 0c       	mov    DWORD PTR [r12+rax*1+0xc],ecx
+    1d46:	48 8b 4c 24 10       	mov    rcx,QWORD PTR [rsp+0x10]
+    1d4b:	49 89 4c 04 04       	mov    QWORD PTR [r12+rax*1+0x4],rcx
+    1d50:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1d57:	00 00 
+    1d59:	48 3b 44 24 30       	cmp    rax,QWORD PTR [rsp+0x30]
+    1d5e:	75 20                	jne    1d80 <tokenize_program+0x1d0>
+
+    return tokens.ptr;
+    1d60:	4c 89 e0             	mov    rax,r12
+    1d63:	48 83 c4 38          	add    rsp,0x38
+    1d67:	5b                   	pop    rbx
+    1d68:	41 5c                	pop    r12
+    1d6a:	41 5d                	pop    r13
+    1d6c:	41 5e                	pop    r14
+    1d6e:	41 5f                	pop    r15
+    1d70:	5d                   	pop    rbp
+    1d71:	c3                   	ret    
+            error("unexpected token found");
+    1d72:	48 8d 3d 34 14 00 00 	lea    rdi,[rip+0x1434]        # 31ad <operators_str+0xbd>
+    1d79:	31 c0                	xor    eax,eax
+    1d7b:	e8 e0 f7 ff ff       	call   1560 <error>
+    1d80:	e8 0b f3 ff ff       	call   1090 <__stack_chk_fail@plt>
+    1d85:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1d8c:	00 00 00 
+    1d8f:	90                   	nop
+
+0000000000001d90 <print_token_type>:
+        "   return 1 + 2*bob + 3;\n"
+        //"return 2*bob;\n"
+        "}";
+
+void print_token_type(token_t* token)
+{
+    1d90:	53                   	push   rbx
+    switch (token->type)
+    1d91:	8b 07                	mov    eax,DWORD PTR [rdi]
+    1d93:	83 c0 ff             	add    eax,0xffffffff
+    1d96:	83 f8 12             	cmp    eax,0x12
+    1d99:	0f 87 c2 00 00 00    	ja     1e61 <print_token_type+0xd1>
+    1d9f:	48 89 fb             	mov    rbx,rdi
+    1da2:	48 8d 0d 1b 14 00 00 	lea    rcx,[rip+0x141b]        # 31c4 <operators_str+0xd4>
+    1da9:	48 63 04 81          	movsxd rax,DWORD PTR [rcx+rax*4]
+    1dad:	48 01 c8             	add    rax,rcx
+    1db0:	ff e0                	jmp    rax
+    {
+        case KEYWORD_IF:
+            printf("if"); break;
+    1db2:	48 8d 3d 63 13 00 00 	lea    rdi,[rip+0x1363]        # 311c <operators_str+0x2c>
+    1db9:	eb 59                	jmp    1e14 <print_token_type+0x84>
+        case KEYWORD_ELSE:
+            printf("else"); break;
+    1dbb:	48 8d 3d 64 13 00 00 	lea    rdi,[rip+0x1364]        # 3126 <operators_str+0x36>
+    1dc2:	eb 50                	jmp    1e14 <print_token_type+0x84>
+        case KEYWORD_WHILE:
+            printf("while"); break;
+        case KEYWORD_DO:
+            printf("do"); break;
+    1dc4:	48 8d 3d 54 13 00 00 	lea    rdi,[rip+0x1354]        # 311f <operators_str+0x2f>
+    1dcb:	eb 47                	jmp    1e14 <print_token_type+0x84>
+        case KEYWORD_FOR:
+            printf("for"); break;
+    1dcd:	48 8d 3d 4e 13 00 00 	lea    rdi,[rip+0x134e]        # 3122 <operators_str+0x32>
+    1dd4:	eb 3e                	jmp    1e14 <print_token_type+0x84>
+        case KEYWORD_RETURN:
+            printf("return"); break;
+    1dd6:	48 8d 3d 54 13 00 00 	lea    rdi,[rip+0x1354]        # 3131 <operators_str+0x41>
+    1ddd:	eb 35                	jmp    1e14 <print_token_type+0x84>
+        case INTEGER_LITERAL:
+            printf("constant (%d)", token->data.integer); break;
+        case FLOAT_LITERAL:
+            printf("constant (%f)", token->data.fp); break;
+        case STRING_LITERAL:
+            printf("string (\"%s\")", token->data.str); break;
+    1ddf:	48 8b 73 08          	mov    rsi,QWORD PTR [rbx+0x8]
+    1de3:	48 8d 3d 90 14 00 00 	lea    rdi,[rip+0x1490]        # 327a <operators_str+0x18a>
+    1dea:	eb 3b                	jmp    1e27 <print_token_type+0x97>
+        case OPEN_PARENTHESIS:
+            printf("("); break;
+    1dec:	bf 28 00 00 00       	mov    edi,0x28
+    1df1:	5b                   	pop    rbx
+    1df2:	e9 39 f2 ff ff       	jmp    1030 <putchar@plt>
+        case CLOSE_PARENTHESIS:
+            printf(")"); break;
+    1df7:	bf 29 00 00 00       	mov    edi,0x29
+    1dfc:	5b                   	pop    rbx
+    1dfd:	e9 2e f2 ff ff       	jmp    1030 <putchar@plt>
+        case OPEN_BRACE:
+            printf("{"); break;
+    1e02:	bf 7b 00 00 00       	mov    edi,0x7b
+    1e07:	5b                   	pop    rbx
+    1e08:	e9 23 f2 ff ff       	jmp    1030 <putchar@plt>
+            printf("while"); break;
+    1e0d:	48 8d 3d 17 13 00 00 	lea    rdi,[rip+0x1317]        # 312b <operators_str+0x3b>
+    1e14:	31 c0                	xor    eax,eax
+    1e16:	5b                   	pop    rbx
+    1e17:	e9 94 f2 ff ff       	jmp    10b0 <printf@plt>
+            printf("ident (%s)", token->data.str); break;
+    1e1c:	48 8b 73 08          	mov    rsi,QWORD PTR [rbx+0x8]
+    1e20:	48 8d 3d 21 14 00 00 	lea    rdi,[rip+0x1421]        # 3248 <operators_str+0x158>
+    1e27:	31 c0                	xor    eax,eax
+    1e29:	5b                   	pop    rbx
+    1e2a:	e9 81 f2 ff ff       	jmp    10b0 <printf@plt>
+            printf("operator '");
+    1e2f:	48 8d 3d 1d 14 00 00 	lea    rdi,[rip+0x141d]        # 3253 <operators_str+0x163>
+    1e36:	31 c0                	xor    eax,eax
+    1e38:	e8 73 f2 ff ff       	call   10b0 <printf@plt>
+            switch (token->data.op)
+    1e3d:	8b 43 08             	mov    eax,DWORD PTR [rbx+0x8]
+    1e40:	48 83 f8 03          	cmp    rax,0x3
+    1e44:	77 1b                	ja     1e61 <print_token_type+0xd1>
+    1e46:	48 8d 0d c3 13 00 00 	lea    rcx,[rip+0x13c3]        # 3210 <operators_str+0x120>
+    1e4d:	48 63 04 81          	movsxd rax,DWORD PTR [rcx+rax*4]
+    1e51:	48 01 c8             	add    rax,rcx
+    1e54:	ff e0                	jmp    rax
+                    printf("+"); break;
+    1e56:	bf 2b 00 00 00       	mov    edi,0x2b
+    1e5b:	5b                   	pop    rbx
+    1e5c:	e9 cf f1 ff ff       	jmp    1030 <putchar@plt>
+        case COMMA:
+            printf(","); break;
+        case SEMICOLON:
+            printf(";"); break;
+    }
+}
+    1e61:	5b                   	pop    rbx
+    1e62:	c3                   	ret    
+            printf("constant (%d)", token->data.integer); break;
+    1e63:	8b 73 08             	mov    esi,DWORD PTR [rbx+0x8]
+    1e66:	48 8d 3d f1 13 00 00 	lea    rdi,[rip+0x13f1]        # 325e <operators_str+0x16e>
+    1e6d:	31 c0                	xor    eax,eax
+    1e6f:	5b                   	pop    rbx
+    1e70:	e9 3b f2 ff ff       	jmp    10b0 <printf@plt>
+            printf("constant (%f)", token->data.fp); break;
+    1e75:	f3 0f 10 43 08       	movss  xmm0,DWORD PTR [rbx+0x8]
+    1e7a:	f3 0f 5a c0          	cvtss2sd xmm0,xmm0
+    1e7e:	48 8d 3d e7 13 00 00 	lea    rdi,[rip+0x13e7]        # 326c <operators_str+0x17c>
+    1e85:	b0 01                	mov    al,0x1
+    1e87:	5b                   	pop    rbx
+    1e88:	e9 23 f2 ff ff       	jmp    10b0 <printf@plt>
+            printf("}"); break;
+    1e8d:	bf 7d 00 00 00       	mov    edi,0x7d
+    1e92:	5b                   	pop    rbx
+    1e93:	e9 98 f1 ff ff       	jmp    1030 <putchar@plt>
+            printf(","); break;
+    1e98:	bf 2c 00 00 00       	mov    edi,0x2c
+    1e9d:	5b                   	pop    rbx
+    1e9e:	e9 8d f1 ff ff       	jmp    1030 <putchar@plt>
+            printf(";"); break;
+    1ea3:	bf 3b 00 00 00       	mov    edi,0x3b
+    1ea8:	5b                   	pop    rbx
+    1ea9:	e9 82 f1 ff ff       	jmp    1030 <putchar@plt>
+                    printf("*"); break;
+    1eae:	bf 2a 00 00 00       	mov    edi,0x2a
+    1eb3:	5b                   	pop    rbx
+    1eb4:	e9 77 f1 ff ff       	jmp    1030 <putchar@plt>
+                    printf("/"); break;
+    1eb9:	bf 2f 00 00 00       	mov    edi,0x2f
+    1ebe:	5b                   	pop    rbx
+    1ebf:	e9 6c f1 ff ff       	jmp    1030 <putchar@plt>
+                    printf("-"); break;
+    1ec4:	bf 2d 00 00 00       	mov    edi,0x2d
+    1ec9:	5b                   	pop    rbx
+    1eca:	e9 61 f1 ff ff       	jmp    1030 <putchar@plt>
+    1ecf:	90                   	nop
+
+0000000000001ed0 <main>:
+
+int main()
+{
+    1ed0:	41 57                	push   r15
+    1ed2:	41 56                	push   r14
+    1ed4:	53                   	push   rbx
+    1ed5:	48 83 ec 20          	sub    rsp,0x20
+    1ed9:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1ee0:	00 00 
+    1ee2:	48 89 44 24 18       	mov    QWORD PTR [rsp+0x18],rax
+    token_t* token = tokenize_program(example_program);
+    1ee7:	48 8b 3d c2 31 00 00 	mov    rdi,QWORD PTR [rip+0x31c2]        # 50b0 <example_program>
+    1eee:	e8 bd fc ff ff       	call   1bb0 <tokenize_program>
+    1ef3:	48 89 c3             	mov    rbx,rax
+    set_parser_token_list(token);
+    1ef6:	48 89 c7             	mov    rdi,rax
+    1ef9:	e8 e2 00 00 00       	call   1fe0 <set_parser_token_list>
+
+    while (token->type != TOKEN_EOF)
+    1efe:	83 3b 00             	cmp    DWORD PTR [rbx],0x0
+    1f01:	74 41                	je     1f44 <main+0x74>
+    1f03:	4c 8d 35 7e 13 00 00 	lea    r14,[rip+0x137e]        # 3288 <operators_str+0x198>
+    1f0a:	4c 8d 3d 7d 13 00 00 	lea    r15,[rip+0x137d]        # 328e <operators_str+0x19e>
+    1f11:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1f18:	00 00 00 
+    1f1b:	0f 1f 44 00 00       	nop    DWORD PTR [rax+rax*1+0x0]
+    {
+        printf("Token '");
+    1f20:	4c 89 f7             	mov    rdi,r14
+    1f23:	31 c0                	xor    eax,eax
+    1f25:	e8 86 f1 ff ff       	call   10b0 <printf@plt>
+        print_token_type(token);
+    1f2a:	48 89 df             	mov    rdi,rbx
+    1f2d:	e8 5e fe ff ff       	call   1d90 <print_token_type>
+        printf("'\n");
+    1f32:	4c 89 ff             	mov    rdi,r15
+    1f35:	e8 26 f1 ff ff       	call   1060 <puts@plt>
+    while (token->type != TOKEN_EOF)
+    1f3a:	83 7b 10 00          	cmp    DWORD PTR [rbx+0x10],0x0
+
+        ++token;
+    1f3e:	48 8d 5b 10          	lea    rbx,[rbx+0x10]
+    while (token->type != TOKEN_EOF)
+    1f42:	75 dc                	jne    1f20 <main+0x50>
+    }
+
+    DYNARRAY(struct { int a; int b; }) test;
+    DYNARRAY_INIT(test, 4);
+    1f44:	bf 20 00 00 00       	mov    edi,0x20
+    1f49:	e8 a2 f1 ff ff       	call   10f0 <malloc@plt>
+    1f4e:	48 b9 08 00 00 00 02 	movabs rcx,0x200000008
+    1f55:	00 00 00 
+    DYNARRAY_ADD(test, {8, 2});
+    1f58:	48 89 08             	mov    QWORD PTR [rax],rcx
+    DYNARRAY_ADD(test2, 256);
+
+
+    typeof(*test.ptr) val = {8, 2};
+
+    printf("%d %d | %d\n", test.ptr[0].a, test.ptr[0].b, test2.ptr[0]);
+    1f5b:	8b 50 04             	mov    edx,DWORD PTR [rax+0x4]
+    1f5e:	48 8d 3d 2b 13 00 00 	lea    rdi,[rip+0x132b]        # 3290 <operators_str+0x1a0>
+    1f65:	be 08 00 00 00       	mov    esi,0x8
+    1f6a:	b9 00 01 00 00       	mov    ecx,0x100
+    1f6f:	31 c0                	xor    eax,eax
+    1f71:	e8 3a f1 ff ff       	call   10b0 <printf@plt>
+    printf("%d %d\n", val.a, val.b);
+    1f76:	48 8d 3d 1f 13 00 00 	lea    rdi,[rip+0x131f]        # 329c <operators_str+0x1ac>
+    1f7d:	be 08 00 00 00       	mov    esi,0x8
+    1f82:	ba 02 00 00 00       	mov    edx,0x2
+    1f87:	31 c0                	xor    eax,eax
+    1f89:	e8 22 f1 ff ff       	call   10b0 <printf@plt>
+    1f8e:	48 8d 5c 24 08       	lea    rbx,[rsp+0x8]
+
+    program_t prog;
+    parse_program(&prog);
+    1f93:	48 89 df             	mov    rdi,rbx
+    1f96:	e8 05 06 00 00       	call   25a0 <parse_program>
+
+    print_program(&prog);
+    1f9b:	48 89 df             	mov    rdi,rbx
+    1f9e:	e8 8d f3 ff ff       	call   1330 <print_program>
+    1fa3:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    1faa:	00 00 
+    1fac:	48 3b 44 24 18       	cmp    rax,QWORD PTR [rsp+0x18]
+    1fb1:	75 0c                	jne    1fbf <main+0xef>
+}
+    1fb3:	31 c0                	xor    eax,eax
+    1fb5:	48 83 c4 20          	add    rsp,0x20
+    1fb9:	5b                   	pop    rbx
+    1fba:	41 5e                	pop    r14
+    1fbc:	41 5f                	pop    r15
+    1fbe:	c3                   	ret    
+    1fbf:	e8 cc f0 ff ff       	call   1090 <__stack_chk_fail@plt>
+    1fc4:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    1fcb:	00 00 00 
+    1fce:	66 90                	xchg   ax,ax
+
+0000000000001fd0 <is_binop>:
+    /* LE  : */ 7,
+};
+
+int is_binop(int op)
+{
+    return op < OP_INC;
+    1fd0:	31 c0                	xor    eax,eax
+    1fd2:	83 ff 09             	cmp    edi,0x9
+    1fd5:	0f 9c c0             	setl   al
+    1fd8:	c3                   	ret    
+    1fd9:	0f 1f 80 00 00 00 00 	nop    DWORD PTR [rax+0x0]
+
+0000000000001fe0 <set_parser_token_list>:
+}
+
+void set_parser_token_list(token_t *token_list)
+{
+    tokens = token_list;
+    1fe0:	48 89 3d d9 30 00 00 	mov    QWORD PTR [rip+0x30d9],rdi        # 50c0 <tokens>
+}
+    1fe7:	c3                   	ret    
+    1fe8:	0f 1f 84 00 00 00 00 	nop    DWORD PTR [rax+rax*1+0x0]
+    1fef:	00 
+
+0000000000001ff0 <next_token>:
+
+token_t* next_token()
+{
+    return tokens;
+    1ff0:	48 8b 05 c9 30 00 00 	mov    rax,QWORD PTR [rip+0x30c9]        # 50c0 <tokens>
+    1ff7:	c3                   	ret    
+    1ff8:	0f 1f 84 00 00 00 00 	nop    DWORD PTR [rax+rax*1+0x0]
+    1fff:	00 
+
+0000000000002000 <consume_token>:
+}
+
+token_t* consume_token()
+{
+    return tokens++;
+    2000:	48 8b 05 b9 30 00 00 	mov    rax,QWORD PTR [rip+0x30b9]        # 50c0 <tokens>
+    2007:	48 8d 48 10          	lea    rcx,[rax+0x10]
+    200b:	48 89 0d ae 30 00 00 	mov    QWORD PTR [rip+0x30ae],rcx        # 50c0 <tokens>
+    2012:	c3                   	ret    
+    2013:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    201a:	00 00 00 
+    201d:	0f 1f 00             	nop    DWORD PTR [rax]
+
+0000000000002020 <accept>:
+}
+
+token_t* accept(token_type_t type)
+{
+    2020:	55                   	push   rbp
+    2021:	53                   	push   rbx
+    2022:	50                   	push   rax
+    2023:	89 fd                	mov    ebp,edi
+    token_t* cur_tok = next_token();
+    2025:	e8 c6 ff ff ff       	call   1ff0 <next_token>
+    if (cur_tok->type != type)
+    202a:	39 28                	cmp    DWORD PTR [rax],ebp
+    202c:	75 0a                	jne    2038 <accept+0x18>
+    202e:	48 89 c3             	mov    rbx,rax
+    {
+        return NULL;
+    }
+
+    consume_token();
+    2031:	e8 ca ff ff ff       	call   2000 <consume_token>
+    2036:	eb 02                	jmp    203a <accept+0x1a>
+    2038:	31 db                	xor    ebx,ebx
+
+    return cur_tok;
+}
+    203a:	48 89 d8             	mov    rax,rbx
+    203d:	48 83 c4 08          	add    rsp,0x8
+    2041:	5b                   	pop    rbx
+    2042:	5d                   	pop    rbp
+    2043:	c3                   	ret    
+    2044:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    204b:	00 00 00 
+    204e:	66 90                	xchg   ax,ax
+
+0000000000002050 <expect>:
+
+token_t* expect(token_type_t type)
+{
+    2050:	55                   	push   rbp
+    2051:	53                   	push   rbx
+    2052:	50                   	push   rax
+    2053:	89 fd                	mov    ebp,edi
+    token_t* cur_tok = next_token();
+    2055:	e8 96 ff ff ff       	call   1ff0 <next_token>
+    if (cur_tok->type != type)
+    205a:	8b 10                	mov    edx,DWORD PTR [rax]
+    205c:	39 ea                	cmp    edx,ebp
+    205e:	75 12                	jne    2072 <expect+0x22>
+    2060:	48 89 c3             	mov    rbx,rax
+    {
+        error("expected '%d' got '%d'", type, cur_tok->type);
+    }
+
+    consume_token();
+    2063:	e8 98 ff ff ff       	call   2000 <consume_token>
+
+    return cur_tok;
+    2068:	48 89 d8             	mov    rax,rbx
+    206b:	48 83 c4 08          	add    rsp,0x8
+    206f:	5b                   	pop    rbx
+    2070:	5d                   	pop    rbp
+    2071:	c3                   	ret    
+        error("expected '%d' got '%d'", type, cur_tok->type);
+    2072:	48 8d 3d 2a 12 00 00 	lea    rdi,[rip+0x122a]        # 32a3 <operators_str+0x1b3>
+    2079:	89 ee                	mov    esi,ebp
+    207b:	31 c0                	xor    eax,eax
+    207d:	e8 de f4 ff ff       	call   1560 <error>
+    2082:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    2089:	00 00 00 
+    208c:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000002090 <parse_value>:
+}
+
+void parse_expr(expression_t* expr, int p);
+
+void parse_value(value_t* value)
+{
+    2090:	41 57                	push   r15
+    2092:	41 56                	push   r14
+    2094:	53                   	push   rbx
+    2095:	48 83 ec 30          	sub    rsp,0x30
+    2099:	48 89 fb             	mov    rbx,rdi
+    209c:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    20a3:	00 00 
+    20a5:	48 89 44 24 28       	mov    QWORD PTR [rsp+0x28],rax
+    token_t* ident_tok;
+    if (accept(OPEN_PARENTHESIS))
+    20aa:	bf 0e 00 00 00       	mov    edi,0xe
+    20af:	e8 6c ff ff ff       	call   2020 <accept>
+    20b4:	48 85 c0             	test   rax,rax
+    20b7:	74 59                	je     2112 <parse_value+0x82>
+    20b9:	48 8d 7c 24 08       	lea    rdi,[rsp+0x8]
+    {
+        expression_t expr;
+        parse_expr(&expr, 0);
+    20be:	31 f6                	xor    esi,esi
+    20c0:	e8 db 00 00 00       	call   21a0 <parse_expr>
+        expect(CLOSE_PARENTHESIS);
+    20c5:	bf 0f 00 00 00       	mov    edi,0xf
+    20ca:	e8 81 ff ff ff       	call   2050 <expect>
+
+        value->type = ENCLOSED;
+    20cf:	c7 03 00 00 00 00    	mov    DWORD PTR [rbx],0x0
+        expression_t* factor_expr = (expression_t*)malloc(sizeof(expression_t));
+    20d5:	bf 20 00 00 00       	mov    edi,0x20
+    20da:	e8 11 f0 ff ff       	call   10f0 <malloc@plt>
+        *factor_expr = expr;
+    20df:	0f 10 44 24 08       	movups xmm0,XMMWORD PTR [rsp+0x8]
+    20e4:	0f 10 4c 24 18       	movups xmm1,XMMWORD PTR [rsp+0x18]
+    20e9:	0f 11 00             	movups XMMWORD PTR [rax],xmm0
+    20ec:	0f 11 48 10          	movups XMMWORD PTR [rax+0x10],xmm1
+    20f0:	48 89 43 08          	mov    QWORD PTR [rbx+0x8],rax
+    20f4:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    20fb:	00 00 
+    20fd:	48 3b 44 24 28       	cmp    rax,QWORD PTR [rsp+0x28]
+    2102:	0f 85 8a 00 00 00    	jne    2192 <parse_value+0x102>
+    {
+        token_t* lit = expect(INTEGER_LITERAL);
+        value->type = CONSTANT;
+        value->constant = lit->data.integer;
+    }
+}
+    2108:	48 83 c4 30          	add    rsp,0x30
+    210c:	5b                   	pop    rbx
+    210d:	41 5e                	pop    r14
+    210f:	41 5f                	pop    r15
+    2111:	c3                   	ret    
+    else if (next_token()->type == OPERATOR &&
+    2112:	e8 d9 fe ff ff       	call   1ff0 <next_token>
+    2117:	83 38 08             	cmp    DWORD PTR [rax],0x8
+    211a:	75 3d                	jne    2159 <parse_value+0xc9>
+             (next_token()->data.op == '+' || next_token()->data.op == '-'))
+    211c:	8b 40 08             	mov    eax,DWORD PTR [rax+0x8]
+    211f:	83 f8 2d             	cmp    eax,0x2d
+    2122:	74 05                	je     2129 <parse_value+0x99>
+    2124:	83 f8 2b             	cmp    eax,0x2b
+    2127:	75 30                	jne    2159 <parse_value+0xc9>
+        token_t* op = consume_token();
+    2129:	e8 d2 fe ff ff       	call   2000 <consume_token>
+    212e:	49 89 c6             	mov    r14,rax
+        value_t* unary_op_factor = (value_t*)malloc(sizeof(value_t));
+    2131:	bf 18 00 00 00       	mov    edi,0x18
+    2136:	e8 b5 ef ff ff       	call   10f0 <malloc@plt>
+    213b:	49 89 c7             	mov    r15,rax
+        parse_value(unary_op_factor);
+    213e:	48 89 c7             	mov    rdi,rax
+    2141:	e8 4a ff ff ff       	call   2090 <parse_value>
+        value->type = UNARY_OP_FACTOR;
+    2146:	c7 03 01 00 00 00    	mov    DWORD PTR [rbx],0x1
+        value->unary_op = op->data.op;
+    214c:	41 8b 46 08          	mov    eax,DWORD PTR [r14+0x8]
+    2150:	89 43 08             	mov    DWORD PTR [rbx+0x8],eax
+        value->unary_value = unary_op_factor;
+    2153:	4c 89 7b 10          	mov    QWORD PTR [rbx+0x10],r15
+    2157:	eb 9b                	jmp    20f4 <parse_value+0x64>
+    else if ((ident_tok = accept(IDENTIFIER)))
+    2159:	bf 07 00 00 00       	mov    edi,0x7
+    215e:	e8 bd fe ff ff       	call   2020 <accept>
+    2163:	48 85 c0             	test   rax,rax
+    2166:	74 0f                	je     2177 <parse_value+0xe7>
+        value->type = IDENT;
+    2168:	c7 03 02 00 00 00    	mov    DWORD PTR [rbx],0x2
+        value->ident = ident_tok->data.str;;
+    216e:	48 8b 40 08          	mov    rax,QWORD PTR [rax+0x8]
+    2172:	e9 79 ff ff ff       	jmp    20f0 <parse_value+0x60>
+        token_t* lit = expect(INTEGER_LITERAL);
+    2177:	bf 0b 00 00 00       	mov    edi,0xb
+    217c:	e8 cf fe ff ff       	call   2050 <expect>
+        value->type = CONSTANT;
+    2181:	c7 03 03 00 00 00    	mov    DWORD PTR [rbx],0x3
+        value->constant = lit->data.integer;
+    2187:	8b 40 08             	mov    eax,DWORD PTR [rax+0x8]
+    218a:	89 43 08             	mov    DWORD PTR [rbx+0x8],eax
+    218d:	e9 62 ff ff ff       	jmp    20f4 <parse_value+0x64>
+    2192:	e8 f9 ee ff ff       	call   1090 <__stack_chk_fail@plt>
+    2197:	66 0f 1f 84 00 00 00 	nop    WORD PTR [rax+rax*1+0x0]
+    219e:	00 00 
+
+00000000000021a0 <parse_expr>:
+    }
+}
+
+#include <stdio.h>
+void parse_expr(expression_t* expr, int p)
+{
+    21a0:	55                   	push   rbp
+    21a1:	41 57                	push   r15
+    21a3:	41 56                	push   r14
+    21a5:	41 55                	push   r13
+    21a7:	41 54                	push   r12
+    21a9:	53                   	push   rbx
+    21aa:	48 83 ec 48          	sub    rsp,0x48
+    21ae:	41 89 f7             	mov    r15d,esi
+    21b1:	48 89 3c 24          	mov    QWORD PTR [rsp],rdi
+    21b5:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    21bc:	00 00 
+    21be:	48 89 44 24 40       	mov    QWORD PTR [rsp+0x40],rax
+    expression_t* lhs = (expression_t*)malloc(sizeof(expression_t));
+    21c3:	bf 20 00 00 00       	mov    edi,0x20
+    21c8:	e8 23 ef ff ff       	call   10f0 <malloc@plt>
+    21cd:	49 89 c6             	mov    r14,rax
+    21d0:	48 8d 7c 24 28       	lea    rdi,[rsp+0x28]
+
+    value_t val;
+    parse_value(&val);
+    21d5:	e8 b6 fe ff ff       	call   2090 <parse_value>
+    lhs->type = VALUE;
+    21da:	41 c7 06 00 00 00 00 	mov    DWORD PTR [r14],0x0
+    lhs->value = val;
+    21e1:	48 8b 44 24 38       	mov    rax,QWORD PTR [rsp+0x38]
+    21e6:	49 89 46 18          	mov    QWORD PTR [r14+0x18],rax
+    21ea:	0f 10 44 24 28       	movups xmm0,XMMWORD PTR [rsp+0x28]
+    21ef:	41 0f 11 46 08       	movups XMMWORD PTR [r14+0x8],xmm0
+
+    if (val.type == CONSTANT)
+    21f4:	8b 44 24 28          	mov    eax,DWORD PTR [rsp+0x28]
+    21f8:	83 f8 02             	cmp    eax,0x2
+    21fb:	74 19                	je     2216 <parse_expr+0x76>
+    21fd:	83 f8 03             	cmp    eax,0x3
+    2200:	75 27                	jne    2229 <parse_expr+0x89>
+        printf("read %d\n", val.constant);
+    2202:	8b 74 24 30          	mov    esi,DWORD PTR [rsp+0x30]
+    2206:	48 8d 3d ad 10 00 00 	lea    rdi,[rip+0x10ad]        # 32ba <operators_str+0x1ca>
+    220d:	31 c0                	xor    eax,eax
+    220f:	e8 9c ee ff ff       	call   10b0 <printf@plt>
+    2214:	eb 13                	jmp    2229 <parse_expr+0x89>
+    if (val.type == IDENT)
+        printf("read %s\n", val.ident);
+    2216:	48 8b 74 24 30       	mov    rsi,QWORD PTR [rsp+0x30]
+    221b:	48 8d 3d a1 10 00 00 	lea    rdi,[rip+0x10a1]        # 32c3 <operators_str+0x1d3>
+    2222:	31 c0                	xor    eax,eax
+    2224:	e8 87 ee ff ff       	call   10b0 <printf@plt>
+
+    token_t* op = next_token();
+    2229:	e8 c2 fd ff ff       	call   1ff0 <next_token>
+    while (op->type == OPERATOR && is_binop(op->data.op)
+    222e:	83 38 08             	cmp    DWORD PTR [rax],0x8
+    2231:	0f 85 9d 00 00 00    	jne    22d4 <parse_expr+0x134>
+    2237:	48 89 c3             	mov    rbx,rax
+    223a:	45 8d 6f 01          	lea    r13d,[r15+0x1]
+    223e:	66 90                	xchg   ax,ax
+    2240:	8b 6b 08             	mov    ebp,DWORD PTR [rbx+0x8]
+    2243:	89 ef                	mov    edi,ebp
+    2245:	e8 86 fd ff ff       	call   1fd0 <is_binop>
+    224a:	85 c0                	test   eax,eax
+           && precedence[op->data.op] >= p)
+    224c:	0f 84 82 00 00 00    	je     22d4 <parse_expr+0x134>
+    2252:	48 63 c5             	movsxd rax,ebp
+    2255:	48 8d 0d 74 10 00 00 	lea    rcx,[rip+0x1074]        # 32d0 <precedence>
+    225c:	44 39 3c 81          	cmp    DWORD PTR [rcx+rax*4],r15d
+    while (op->type == OPERATOR && is_binop(op->data.op)
+    2260:	7c 72                	jl     22d4 <parse_expr+0x134>
+    {
+        consume_token();
+    2262:	e8 99 fd ff ff       	call   2000 <consume_token>
+
+        expression_t rhs;
+        parse_expr(&rhs, p + 1);
+    2267:	48 8d 7c 24 08       	lea    rdi,[rsp+0x8]
+    226c:	44 89 ee             	mov    esi,r13d
+    226f:	e8 2c ff ff ff       	call   21a0 <parse_expr>
+
+        expression_t* new_node = (expression_t*)malloc(sizeof(expression_t));
+    2274:	bf 20 00 00 00       	mov    edi,0x20
+    2279:	e8 72 ee ff ff       	call   10f0 <malloc@plt>
+    227e:	49 89 c4             	mov    r12,rax
+
+        new_node->type = BINOP;
+    2281:	c7 00 01 00 00 00    	mov    DWORD PTR [rax],0x1
+        new_node->binop = (binop_t*)malloc(sizeof(binop_t));
+    2287:	bf 48 00 00 00       	mov    edi,0x48
+    228c:	e8 5f ee ff ff       	call   10f0 <malloc@plt>
+    2291:	49 89 44 24 08       	mov    QWORD PTR [r12+0x8],rax
+        new_node->binop->left = *lhs;
+    2296:	41 0f 10 06          	movups xmm0,XMMWORD PTR [r14]
+    229a:	41 0f 10 4e 10       	movups xmm1,XMMWORD PTR [r14+0x10]
+    229f:	0f 11 48 10          	movups XMMWORD PTR [rax+0x10],xmm1
+    22a3:	0f 11 00             	movups XMMWORD PTR [rax],xmm0
+        new_node->binop->right = rhs;
+    22a6:	0f 10 44 24 08       	movups xmm0,XMMWORD PTR [rsp+0x8]
+    22ab:	0f 10 4c 24 18       	movups xmm1,XMMWORD PTR [rsp+0x18]
+    22b0:	0f 11 40 20          	movups XMMWORD PTR [rax+0x20],xmm0
+    22b4:	0f 11 48 30          	movups XMMWORD PTR [rax+0x30],xmm1
+        new_node->binop->op = op->data.op;
+    22b8:	8b 4b 08             	mov    ecx,DWORD PTR [rbx+0x8]
+    22bb:	89 48 40             	mov    DWORD PTR [rax+0x40],ecx
+
+        lhs = new_node;
+
+        op = next_token();
+    22be:	e8 2d fd ff ff       	call   1ff0 <next_token>
+    22c3:	48 89 c3             	mov    rbx,rax
+    while (op->type == OPERATOR && is_binop(op->data.op)
+    22c6:	83 38 08             	cmp    DWORD PTR [rax],0x8
+    22c9:	4d 89 e6             	mov    r14,r12
+    22cc:	0f 84 6e ff ff ff    	je     2240 <parse_expr+0xa0>
+    22d2:	eb 03                	jmp    22d7 <parse_expr+0x137>
+    22d4:	4d 89 f4             	mov    r12,r14
+    }
+
+    *expr = *lhs;
+    22d7:	41 0f 10 04 24       	movups xmm0,XMMWORD PTR [r12]
+    22dc:	41 0f 10 4c 24 10    	movups xmm1,XMMWORD PTR [r12+0x10]
+    22e2:	48 8b 04 24          	mov    rax,QWORD PTR [rsp]
+    22e6:	0f 11 48 10          	movups XMMWORD PTR [rax+0x10],xmm1
+    22ea:	0f 11 00             	movups XMMWORD PTR [rax],xmm0
+    22ed:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    22f4:	00 00 
+    22f6:	48 3b 44 24 40       	cmp    rax,QWORD PTR [rsp+0x40]
+    22fb:	75 0f                	jne    230c <parse_expr+0x16c>
+}
+    22fd:	48 83 c4 48          	add    rsp,0x48
+    2301:	5b                   	pop    rbx
+    2302:	41 5c                	pop    r12
+    2304:	41 5d                	pop    r13
+    2306:	41 5e                	pop    r14
+    2308:	41 5f                	pop    r15
+    230a:	5d                   	pop    rbp
+    230b:	c3                   	ret    
+    230c:	e8 7f ed ff ff       	call   1090 <__stack_chk_fail@plt>
+    2311:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    2318:	00 00 00 
+    231b:	0f 1f 44 00 00       	nop    DWORD PTR [rax+rax*1+0x0]
+
+0000000000002320 <parse_return_statement>:
+{
+    2320:	53                   	push   rbx
+    2321:	48 83 ec 30          	sub    rsp,0x30
+    2325:	48 89 fb             	mov    rbx,rdi
+    2328:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    232f:	00 00 
+    2331:	48 89 44 24 28       	mov    QWORD PTR [rsp+0x28],rax
+    expect(KEYWORD_RETURN);
+    2336:	bf 06 00 00 00       	mov    edi,0x6
+    233b:	e8 10 fd ff ff       	call   2050 <expect>
+    2340:	48 8d 7c 24 08       	lea    rdi,[rsp+0x8]
+    parse_expr(&expr, 0);
+    2345:	31 f6                	xor    esi,esi
+    2347:	e8 54 fe ff ff       	call   21a0 <parse_expr>
+    ret_statement->expr = expr;
+    234c:	0f 10 44 24 08       	movups xmm0,XMMWORD PTR [rsp+0x8]
+    2351:	0f 10 4c 24 18       	movups xmm1,XMMWORD PTR [rsp+0x18]
+    2356:	0f 11 4b 10          	movups XMMWORD PTR [rbx+0x10],xmm1
+    235a:	0f 11 03             	movups XMMWORD PTR [rbx],xmm0
+    235d:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    2364:	00 00 
+    2366:	48 3b 44 24 28       	cmp    rax,QWORD PTR [rsp+0x28]
+    236b:	75 06                	jne    2373 <parse_return_statement+0x53>
+}
+    236d:	48 83 c4 30          	add    rsp,0x30
+    2371:	5b                   	pop    rbx
+    2372:	c3                   	ret    
+    2373:	e8 18 ed ff ff       	call   1090 <__stack_chk_fail@plt>
+    2378:	0f 1f 84 00 00 00 00 	nop    DWORD PTR [rax+rax*1+0x0]
+    237f:	00 
+
+0000000000002380 <parse_assignment>:
+{
+    2380:	41 56                	push   r14
+    2382:	53                   	push   rbx
+    2383:	48 83 ec 28          	sub    rsp,0x28
+    2387:	48 89 fb             	mov    rbx,rdi
+    238a:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    2391:	00 00 
+    2393:	48 89 44 24 20       	mov    QWORD PTR [rsp+0x20],rax
+    token_t* ident = expect(IDENTIFIER);
+    2398:	bf 07 00 00 00       	mov    edi,0x7
+    239d:	e8 ae fc ff ff       	call   2050 <expect>
+    23a2:	49 89 c6             	mov    r14,rax
+    expect(ASSIGNMENT_OP);
+    23a5:	bf 0a 00 00 00       	mov    edi,0xa
+    23aa:	e8 a1 fc ff ff       	call   2050 <expect>
+    23af:	48 89 e7             	mov    rdi,rsp
+    parse_expr(&expr, 0);
+    23b2:	31 f6                	xor    esi,esi
+    23b4:	e8 e7 fd ff ff       	call   21a0 <parse_expr>
+    assignment->var = ident->data.str;
+    23b9:	49 8b 46 08          	mov    rax,QWORD PTR [r14+0x8]
+    23bd:	48 89 03             	mov    QWORD PTR [rbx],rax
+    assignment->expr = expr;
+    23c0:	0f 10 04 24          	movups xmm0,XMMWORD PTR [rsp]
+    23c4:	0f 10 4c 24 10       	movups xmm1,XMMWORD PTR [rsp+0x10]
+    23c9:	0f 11 4b 18          	movups XMMWORD PTR [rbx+0x18],xmm1
+    23cd:	0f 11 43 08          	movups XMMWORD PTR [rbx+0x8],xmm0
+    23d1:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    23d8:	00 00 
+    23da:	48 3b 44 24 20       	cmp    rax,QWORD PTR [rsp+0x20]
+    23df:	75 08                	jne    23e9 <parse_assignment+0x69>
+}
+    23e1:	48 83 c4 28          	add    rsp,0x28
+    23e5:	5b                   	pop    rbx
+    23e6:	41 5e                	pop    r14
+    23e8:	c3                   	ret    
+    23e9:	e8 a2 ec ff ff       	call   1090 <__stack_chk_fail@plt>
+    23ee:	66 90                	xchg   ax,ax
+
+00000000000023f0 <parse_statement>:
+{
+    23f0:	53                   	push   rbx
+    23f1:	48 83 ec 30          	sub    rsp,0x30
+    23f5:	48 89 fb             	mov    rbx,rdi
+    23f8:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    23ff:	00 00 
+    2401:	48 89 44 24 28       	mov    QWORD PTR [rsp+0x28],rax
+    if (next_token()->type == KEYWORD_RETURN)
+    2406:	e8 e5 fb ff ff       	call   1ff0 <next_token>
+    240b:	83 38 06             	cmp    DWORD PTR [rax],0x6
+    240e:	75 10                	jne    2420 <parse_statement+0x30>
+    2410:	48 89 e7             	mov    rdi,rsp
+        parse_return_statement(&ret);
+    2413:	e8 08 ff ff ff       	call   2320 <parse_return_statement>
+        statement->type = RETURN_STATEMENT;
+    2418:	c7 03 00 00 00 00    	mov    DWORD PTR [rbx],0x0
+    241e:	eb 17                	jmp    2437 <parse_statement+0x47>
+    2420:	48 89 e7             	mov    rdi,rsp
+        parse_assignment(&assignment);
+    2423:	e8 58 ff ff ff       	call   2380 <parse_assignment>
+        statement->type = ASSIGNMENT;
+    2428:	c7 03 01 00 00 00    	mov    DWORD PTR [rbx],0x1
+        statement->assignment = assignment;
+    242e:	48 8b 44 24 20       	mov    rax,QWORD PTR [rsp+0x20]
+    2433:	48 89 43 28          	mov    QWORD PTR [rbx+0x28],rax
+    2437:	0f 10 04 24          	movups xmm0,XMMWORD PTR [rsp]
+    243b:	0f 10 4c 24 10       	movups xmm1,XMMWORD PTR [rsp+0x10]
+    2440:	0f 11 4b 18          	movups XMMWORD PTR [rbx+0x18],xmm1
+    2444:	0f 11 43 08          	movups XMMWORD PTR [rbx+0x8],xmm0
+    expect(SEMICOLON);
+    2448:	bf 13 00 00 00       	mov    edi,0x13
+    244d:	e8 fe fb ff ff       	call   2050 <expect>
+    2452:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    2459:	00 00 
+    245b:	48 3b 44 24 28       	cmp    rax,QWORD PTR [rsp+0x28]
+    2460:	75 06                	jne    2468 <parse_statement+0x78>
+}
+    2462:	48 83 c4 30          	add    rsp,0x30
+    2466:	5b                   	pop    rbx
+    2467:	c3                   	ret    
+    2468:	e8 23 ec ff ff       	call   1090 <__stack_chk_fail@plt>
+    246d:	0f 1f 00             	nop    DWORD PTR [rax]
+
+0000000000002470 <parse_function>:
+{
+    2470:	41 57                	push   r15
+    2472:	41 56                	push   r14
+    2474:	53                   	push   rbx
+    2475:	48 83 ec 40          	sub    rsp,0x40
+    2479:	48 89 fb             	mov    rbx,rdi
+    247c:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    2483:	00 00 
+    2485:	48 89 44 24 38       	mov    QWORD PTR [rsp+0x38],rax
+    248a:	48 b8 00 00 00 00 00 	movabs rax,0x10000000000
+    2491:	01 00 00 
+    DYNARRAY_INIT(func->statement_list, 256);
+    2494:	48 89 47 10          	mov    QWORD PTR [rdi+0x10],rax
+    2498:	bf 00 30 00 00       	mov    edi,0x3000
+    249d:	e8 4e ec ff ff       	call   10f0 <malloc@plt>
+    24a2:	48 89 43 18          	mov    QWORD PTR [rbx+0x18],rax
+    token_t* type = expect(IDENTIFIER);
+    24a6:	bf 07 00 00 00       	mov    edi,0x7
+    24ab:	e8 a0 fb ff ff       	call   2050 <expect>
+    24b0:	49 89 c6             	mov    r14,rax
+    token_t* name = expect(IDENTIFIER);
+    24b3:	bf 07 00 00 00       	mov    edi,0x7
+    24b8:	e8 93 fb ff ff       	call   2050 <expect>
+    24bd:	49 89 c7             	mov    r15,rax
+    expect(OPEN_PARENTHESIS);
+    24c0:	bf 0e 00 00 00       	mov    edi,0xe
+    24c5:	e8 86 fb ff ff       	call   2050 <expect>
+    expect(CLOSE_PARENTHESIS);
+    24ca:	bf 0f 00 00 00       	mov    edi,0xf
+    24cf:	e8 7c fb ff ff       	call   2050 <expect>
+    expect(OPEN_BRACE);
+    24d4:	bf 10 00 00 00       	mov    edi,0x10
+    24d9:	e8 72 fb ff ff       	call   2050 <expect>
+    func->type = type->data.str;
+    24de:	49 8b 46 08          	mov    rax,QWORD PTR [r14+0x8]
+    24e2:	48 89 03             	mov    QWORD PTR [rbx],rax
+    func->name = name->data.str;
+    24e5:	49 8b 47 08          	mov    rax,QWORD PTR [r15+0x8]
+    24e9:	48 89 43 08          	mov    QWORD PTR [rbx+0x8],rax
+    while (next_token()->type != CLOSE_BRACE)
+    24ed:	e8 fe fa ff ff       	call   1ff0 <next_token>
+    24f2:	83 38 11             	cmp    DWORD PTR [rax],0x11
+    24f5:	74 75                	je     256c <parse_function+0xfc>
+    24f7:	4c 8d 74 24 08       	lea    r14,[rsp+0x8]
+    24fc:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+        parse_statement(&statement);
+    2500:	4c 89 f7             	mov    rdi,r14
+    2503:	e8 e8 fe ff ff       	call   23f0 <parse_statement>
+        DYNARRAY_ADD(func->statement_list, statement);
+    2508:	8b 4b 10             	mov    ecx,DWORD PTR [rbx+0x10]
+    250b:	83 c1 01             	add    ecx,0x1
+    250e:	89 4b 10             	mov    DWORD PTR [rbx+0x10],ecx
+    2511:	48 63 43 14          	movsxd rax,DWORD PTR [rbx+0x14]
+    2515:	39 c1                	cmp    ecx,eax
+    2517:	7c 1b                	jl     2534 <parse_function+0xc4>
+    2519:	8d 0c 00             	lea    ecx,[rax+rax*1]
+    251c:	89 4b 14             	mov    DWORD PTR [rbx+0x14],ecx
+    251f:	48 8b 7b 18          	mov    rdi,QWORD PTR [rbx+0x18]
+    2523:	48 c1 e0 05          	shl    rax,0x5
+    2527:	48 8d 34 40          	lea    rsi,[rax+rax*2]
+    252b:	e8 e0 eb ff ff       	call   1110 <realloc@plt>
+    2530:	48 89 43 18          	mov    QWORD PTR [rbx+0x18],rax
+    2534:	48 8b 43 18          	mov    rax,QWORD PTR [rbx+0x18]
+    2538:	48 63 4b 10          	movsxd rcx,DWORD PTR [rbx+0x10]
+    253c:	48 8d 0c 49          	lea    rcx,[rcx+rcx*2]
+    2540:	48 c1 e1 04          	shl    rcx,0x4
+    2544:	0f 10 44 24 08       	movups xmm0,XMMWORD PTR [rsp+0x8]
+    2549:	0f 10 4c 24 18       	movups xmm1,XMMWORD PTR [rsp+0x18]
+    254e:	0f 10 54 24 28       	movups xmm2,XMMWORD PTR [rsp+0x28]
+    2553:	0f 11 54 08 f0       	movups XMMWORD PTR [rax+rcx*1-0x10],xmm2
+    2558:	0f 11 4c 08 e0       	movups XMMWORD PTR [rax+rcx*1-0x20],xmm1
+    255d:	0f 11 44 08 d0       	movups XMMWORD PTR [rax+rcx*1-0x30],xmm0
+    while (next_token()->type != CLOSE_BRACE)
+    2562:	e8 89 fa ff ff       	call   1ff0 <next_token>
+    2567:	83 38 11             	cmp    DWORD PTR [rax],0x11
+    256a:	75 94                	jne    2500 <parse_function+0x90>
+    expect(CLOSE_BRACE);
+    256c:	bf 11 00 00 00       	mov    edi,0x11
+    2571:	e8 da fa ff ff       	call   2050 <expect>
+    2576:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    257d:	00 00 
+    257f:	48 3b 44 24 38       	cmp    rax,QWORD PTR [rsp+0x38]
+    2584:	75 0a                	jne    2590 <parse_function+0x120>
+}
+    2586:	48 83 c4 40          	add    rsp,0x40
+    258a:	5b                   	pop    rbx
+    258b:	41 5e                	pop    r14
+    258d:	41 5f                	pop    r15
+    258f:	c3                   	ret    
+    2590:	e8 fb ea ff ff       	call   1090 <__stack_chk_fail@plt>
+    2595:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    259c:	00 00 00 
+    259f:	90                   	nop
+
+00000000000025a0 <parse_program>:
+{
+    25a0:	41 56                	push   r14
+    25a2:	53                   	push   rbx
+    25a3:	48 83 ec 28          	sub    rsp,0x28
+    25a7:	48 89 fb             	mov    rbx,rdi
+    25aa:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    25b1:	00 00 
+    25b3:	48 89 44 24 20       	mov    QWORD PTR [rsp+0x20],rax
+    25b8:	48 b8 00 00 00 00 20 	movabs rax,0x2000000000
+    25bf:	00 00 00 
+    DYNARRAY_INIT(program->function_list, 32);
+    25c2:	48 89 07             	mov    QWORD PTR [rdi],rax
+    25c5:	bf 00 04 00 00       	mov    edi,0x400
+    25ca:	e8 21 eb ff ff       	call   10f0 <malloc@plt>
+    25cf:	48 89 43 08          	mov    QWORD PTR [rbx+0x8],rax
+    while (next_token()->type != TOKEN_EOF)
+    25d3:	e8 18 fa ff ff       	call   1ff0 <next_token>
+    25d8:	83 38 00             	cmp    DWORD PTR [rax],0x0
+    25db:	74 59                	je     2636 <parse_program+0x96>
+    25dd:	49 89 e6             	mov    r14,rsp
+        parse_function(&func);
+    25e0:	4c 89 f7             	mov    rdi,r14
+    25e3:	e8 88 fe ff ff       	call   2470 <parse_function>
+        DYNARRAY_ADD(program->function_list, func);
+    25e8:	8b 03                	mov    eax,DWORD PTR [rbx]
+    25ea:	83 c0 01             	add    eax,0x1
+    25ed:	89 03                	mov    DWORD PTR [rbx],eax
+    25ef:	48 63 73 04          	movsxd rsi,DWORD PTR [rbx+0x4]
+    25f3:	39 f0                	cmp    eax,esi
+    25f5:	7c 17                	jl     260e <parse_program+0x6e>
+    25f7:	8d 04 36             	lea    eax,[rsi+rsi*1]
+    25fa:	89 43 04             	mov    DWORD PTR [rbx+0x4],eax
+    25fd:	48 8b 7b 08          	mov    rdi,QWORD PTR [rbx+0x8]
+    2601:	48 c1 e6 06          	shl    rsi,0x6
+    2605:	e8 06 eb ff ff       	call   1110 <realloc@plt>
+    260a:	48 89 43 08          	mov    QWORD PTR [rbx+0x8],rax
+    260e:	48 8b 43 08          	mov    rax,QWORD PTR [rbx+0x8]
+    2612:	48 63 0b             	movsxd rcx,DWORD PTR [rbx]
+    2615:	48 c1 e1 05          	shl    rcx,0x5
+    2619:	0f 10 04 24          	movups xmm0,XMMWORD PTR [rsp]
+    261d:	0f 10 4c 24 10       	movups xmm1,XMMWORD PTR [rsp+0x10]
+    2622:	0f 11 4c 08 f0       	movups XMMWORD PTR [rax+rcx*1-0x10],xmm1
+    2627:	0f 11 44 08 e0       	movups XMMWORD PTR [rax+rcx*1-0x20],xmm0
+    while (next_token()->type != TOKEN_EOF)
+    262c:	e8 bf f9 ff ff       	call   1ff0 <next_token>
+    2631:	83 38 00             	cmp    DWORD PTR [rax],0x0
+    2634:	75 aa                	jne    25e0 <parse_program+0x40>
+    2636:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+    263d:	00 00 
+    263f:	48 3b 44 24 20       	cmp    rax,QWORD PTR [rsp+0x20]
+    2644:	75 08                	jne    264e <parse_program+0xae>
+}
+    2646:	48 83 c4 28          	add    rsp,0x28
+    264a:	5b                   	pop    rbx
+    264b:	41 5e                	pop    r14
+    264d:	c3                   	ret    
+    264e:	e8 3d ea ff ff       	call   1090 <__stack_chk_fail@plt>
+    2653:	66 2e 0f 1f 84 00 00 	nop    WORD PTR cs:[rax+rax*1+0x0]
+    265a:	00 00 00 
+    265d:	0f 1f 00             	nop    DWORD PTR [rax]
+
+0000000000002660 <__libc_csu_init>:
+    2660:	f3 0f 1e fa          	endbr64 
+    2664:	41 57                	push   r15
+    2666:	49 89 d7             	mov    r15,rdx
+    2669:	41 56                	push   r14
+    266b:	49 89 f6             	mov    r14,rsi
+    266e:	41 55                	push   r13
+    2670:	41 89 fd             	mov    r13d,edi
+    2673:	41 54                	push   r12
+    2675:	4c 8d 25 54 27 00 00 	lea    r12,[rip+0x2754]        # 4dd0 <__frame_dummy_init_array_entry>
+    267c:	55                   	push   rbp
+    267d:	48 8d 2d 54 27 00 00 	lea    rbp,[rip+0x2754]        # 4dd8 <__init_array_end>
+    2684:	53                   	push   rbx
+    2685:	4c 29 e5             	sub    rbp,r12
+    2688:	48 83 ec 08          	sub    rsp,0x8
+    268c:	67 e8 6e e9 ff ff    	addr32 call 1000 <_init>
+    2692:	48 c1 fd 03          	sar    rbp,0x3
+    2696:	74 1e                	je     26b6 <__libc_csu_init+0x56>
+    2698:	31 db                	xor    ebx,ebx
+    269a:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+    26a0:	4c 89 fa             	mov    rdx,r15
+    26a3:	4c 89 f6             	mov    rsi,r14
+    26a6:	44 89 ef             	mov    edi,r13d
+    26a9:	41 ff 14 dc          	call   QWORD PTR [r12+rbx*8]
+    26ad:	48 83 c3 01          	add    rbx,0x1
+    26b1:	48 39 dd             	cmp    rbp,rbx
+    26b4:	75 ea                	jne    26a0 <__libc_csu_init+0x40>
+    26b6:	48 83 c4 08          	add    rsp,0x8
+    26ba:	5b                   	pop    rbx
+    26bb:	5d                   	pop    rbp
+    26bc:	41 5c                	pop    r12
+    26be:	41 5d                	pop    r13
+    26c0:	41 5e                	pop    r14
+    26c2:	41 5f                	pop    r15
+    26c4:	c3                   	ret    
+    26c5:	66 66 2e 0f 1f 84 00 	data16 nop WORD PTR cs:[rax+rax*1+0x0]
+    26cc:	00 00 00 00 
+
+00000000000026d0 <__libc_csu_fini>:
+    26d0:	f3 0f 1e fa          	endbr64 
+    26d4:	c3                   	ret    
+
+Déassemblage de la section .fini :
+
+00000000000026d8 <_fini>:
+    26d8:	f3 0f 1e fa          	endbr64 
+    26dc:	48 83 ec 08          	sub    rsp,0x8
+    26e0:	48 83 c4 08          	add    rsp,0x8
+    26e4:	c3                   	ret    
