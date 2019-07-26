@@ -1,3 +1,0 @@
-/home/yann/QtProjects/DanPaCompiler/build/CMakeFiles/rebuild_cache.dir
-/home/yann/QtProjects/DanPaCompiler/build/CMakeFiles/DanPaCompiler.dir
-/home/yann/QtProjects/DanPaCompiler/build/CMakeFiles/edit_cache.dir
