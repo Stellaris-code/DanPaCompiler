@@ -1,0 +1,304 @@
+/*
+ast_nodes.h
+
+Copyright (c) 19 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+#ifndef AST_NODES_H
+#define AST_NODES_H
+
+#include "types.h"
+#include "lexer.h"
+#include "dynarray.h"
+
+typedef struct ident_t
+{
+    token_t* name;
+    type_t type; // semantic info
+    int global;
+    union
+    {
+        int local_id;
+        int global_id;
+    };
+} ident_t;
+
+typedef struct local_variable_t
+{
+    int nest_depth;
+    ident_t ident;
+} local_variable_t;
+
+typedef struct global_variable_t
+{
+    ident_t ident;
+} global_variable_t;
+
+typedef struct cast_expression_t
+{
+    token_t* cast_type_token;
+    type_t target_type;
+    struct primary_expression_t* expr;
+} cast_expression_t;
+
+typedef struct array_subscript_t
+{
+    token_t* bracket_token;
+    struct primary_expression_t* array_expr;
+    struct expression_t* subscript_expr;
+} array_subscript_t;
+
+typedef struct struct_access_t
+{
+    token_t* op_token;
+    struct primary_expression_t* struct_expr;
+    token_t* field_name;
+    int indirect_access;
+    struct structure_field_t* field;
+    type_t value_type;
+} struct_access_t;
+
+typedef struct unary_expr_t
+{
+    token_t* unary_op;
+    struct primary_expression_t* unary_value;
+} unary_expr_t;
+
+typedef struct deref_expr_t
+{
+    token_t* asterisk_token;
+    struct primary_expression_t* pointer_expr;
+} deref_expr_t;
+
+typedef struct addr_expr_t
+{
+    token_t* addr_token;
+    struct primary_expression_t* addr_expr;
+} addr_expr_t;
+
+typedef struct asm_expr_t
+{
+    const char* asm_code;
+    DYNARRAY(struct expression_t*) arguments;
+    type_t ret_type;
+} asm_expr_t;
+
+typedef struct sizeof_expr_t
+{
+    int is_expr;
+    struct expression_t* expr;
+    type_t type;
+}
+
+typedef struct function_call_t
+{
+    ident_t func_name;
+    function_t* called_func;
+    DYNARRAY(struct expression_t*) arguments;
+} function_call_t;
+
+typedef struct primary_expression_t
+{
+    enum
+    {
+        ENCLOSED,
+        UNARY_OP_FACTOR,
+        CAST_EXPRESSION,
+        IDENT,
+        FUNCTION_CALL,
+        ARRAY_SUBSCRIPT,
+        STRUCT_ACCESS,
+        POINTER_DEREF,
+        ADDR_GET,
+        ASM_EXPR,
+        SIZEOF_EXPR,
+        INT_CONSTANT,
+        FLOAT_CONSTANT,
+        STRING_LITERAL
+    } type;
+    union
+    {
+        struct expression_t* expr;
+        struct unary_expr_t unary_expr;
+        struct cast_expression_t cast_expr;
+        struct function_call_t func_call;
+        struct struct_access_t struct_access;
+        struct array_subscript_t array_sub;
+        struct deref_expr_t deref;
+        struct addr_expr_t addr;
+        struct asm_expr_t asm_expr;
+        struct sizeof_expr_t
+        token_t* int_constant;
+        token_t* flt_constant;
+        token_t* string_lit;
+        ident_t ident;
+    };
+} primary_expression_t;
+
+typedef struct binop_t binop_t;
+typedef struct expression_t
+{
+    enum
+    {
+        PRIM_EXPR,
+        BINOP
+    } kind;
+    type_t value_type;
+    union
+    {
+        primary_expression_t prim_expr;
+        binop_t* binop;
+    };
+} expression_t;
+
+typedef struct binop_t
+{
+    expression_t left;
+    expression_t right;
+    token_t* op;
+} binop_t;
+
+typedef struct assignment_t
+{
+    primary_expression_t var;
+    expression_t expr;
+    token_t* eq_token;
+} assignment_t;
+
+typedef struct return_statement_t
+{
+    expression_t expr;
+} return_statement_t;
+
+typedef struct statement_t statement_t;
+typedef struct if_statement_t
+{
+    expression_t test;
+    statement_t* statement;
+    statement_t* else_statement;
+} if_statement_t;
+
+typedef struct while_statement_t
+{
+    expression_t test;
+    statement_t* statement;
+} while_statement_t;
+
+typedef struct do_while_statement_t
+{
+    expression_t test;
+    statement_t* statement;
+} do_while_statement_t;
+
+typedef struct compound_statement_t
+{
+    DYNARRAY(statement_t) statement_list;
+} compound_statement_t;
+
+typedef struct variable_declaration_t
+{
+    type_t type;
+    token_t* name;
+    int var_id;
+    int global;
+    assignment_t* init_assignment;
+} variable_declaration_t;
+
+typedef struct typedef_declaration_t
+{
+    type_t type;
+    token_t* name;
+} typedef_declaration_t;
+
+typedef struct struct_declaration_t
+{
+    DYNARRAY(variable_declaration_t) field_decls;
+    structure_t structure;
+} struct_declaration_t;
+
+typedef struct declaration_t
+{
+    enum
+    {
+        VARIABLE_DECLARATION = 0,
+        TYPEDEF_DECLARATION,
+        STRUCT_DECLARATION
+    } type;
+    union
+    {
+        variable_declaration_t var;
+        typedef_declaration_t typedef_decl;
+        struct_declaration_t struct_decl;
+    };
+} declaration_t;
+
+typedef struct statement_t
+{
+    enum
+    {
+        RETURN_STATEMENT = 0,
+        ASSIGNMENT,
+        DECLARATION,
+        COMPOUND_STATEMENT,
+        IF_STATEMENT,
+        WHILE_STATEMENT,
+        DO_WHILE_STATEMENT,
+        DISCARDED_EXPRESSION,
+
+        END_STATEMENT_TYPES
+    } type;
+    union
+    {
+        return_statement_t return_statement;
+        declaration_t declaration;
+        assignment_t assignment;
+        expression_t expression;
+        compound_statement_t compound;
+        if_statement_t if_statement;
+        while_statement_t while_statement;
+        do_while_statement_t do_while_statement;
+    };
+} statement_t;
+
+typedef struct parameter_t
+{
+    type_t type;
+    token_t* name;
+} parameter_t;
+
+typedef struct function_t
+{
+    token_t* name;
+    function_signature_t signature;
+    DYNARRAY(parameter_t) args;
+
+    DYNARRAY(statement_t) statement_list;
+    DYNARRAY(local_variable_t) locals;
+} function_t;
+
+typedef struct program_t
+{
+    DYNARRAY(function_t) function_list;
+    DYNARRAY(declaration_t) global_declarations;
+    DYNARRAY(global_variable_t) globals;
+} program_t;
+
+#endif // AST_NODES_H

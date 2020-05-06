@@ -1,0 +1,176 @@
+#include <stdio.h>
+
+#include "lexer.h"
+#include "parser.h"
+#include "ast_printer.h"
+#include "code_generator.h"
+#include "semantic_pass.h"
+#include "alloc.h"
+
+#if 0
+
+const char* example_program =
+        "struct entry\n"
+        "{\n"
+        "   int one;\n"
+        "   str two;\n"
+        "};\n"
+        "struct bar\n"
+        "{\n"
+        "   str bouh;\n"
+        "   entry duh;\n"
+        "};\n"
+        "int answer(str x)\n"
+        "{\n"
+        "   return 42;\n"
+        "}\n"
+        "int add(int a, int b)\n"
+        "{\n"
+        "return a + b;\n"
+        "}\n"
+        "int* bob_no;\n"
+        "bar*[256] array;\n"
+        "int bob;\n"
+        "typedef int truc;\n"
+        "int main()\n"
+        "{\n"
+        "typedef int int_bis;\n"
+        //"   if (errno + EFAULT)\n"
+        //"       return format(\" test (%s)\", argc);\n"
+        "int_bis tom = sizeof(1 + 2);\n"
+        "int* ptr_test = &tom;\n"
+        "asm(\"syscall #4\", tom);\n"
+        //"int_bis arr_test = tom[56];\n"
+        "bar example_struct;\n"
+        "bar example_struct_2 = example_struct;\n"
+        "tom = -add(42, 36 + 12);\n"
+        "if (answer(\"life\") == 42)\n"
+        "{\n"
+        "   bob = (int)53.4;\n"
+        "   int ted = 5*bob;\n"
+        "}\n"
+        "else if (bob == 54)\n"
+        "   tom = array[24 + 2]->duh.one;\n"
+        "else\n"
+        "   bob = 66;\n"
+        "while (bob)\n"
+        "   bob = *bob_no;\n"
+        "do\n"
+        "{\n"
+        "   *bob_no = 89;\n"
+        "} while(66);\n"
+        "tom = (int)56.4;\n"
+        "   return 12 + 2*bob + 3 == 585;\n"
+        //"invalid/ \n"
+        //"return 2*bob;\n"
+        "}";
+
+#else
+
+const char* example_program = ""
+                              "int collatz(int n)\n"
+                              "{\n"
+                              "if (n%2 == 0)\n"
+                              " return n/2;\n"
+                              "else\n"
+                              " return 3*n + 1;\n"
+                              "}\n"
+                              "void main()\n"
+                              "{\n"
+                              "int val = asm(\"syscall #1\":int);\n"
+                              "do{\n"
+                              "    val = collatz(val);\n"
+                              "    asm(\"syscall #0\", val);\n"
+                              "} while (val != 1);\n"
+                              "}";
+
+
+#endif
+
+void print_token_type(token_t* token)
+{
+    switch (token->type)
+    {
+        case KEYWORD_IF:
+            printf("if"); break;
+        case KEYWORD_ELSE:
+            printf("else"); break;
+        case KEYWORD_WHILE:
+            printf("while"); break;
+        case KEYWORD_DO:
+            printf("do"); break;
+        case KEYWORD_FOR:
+            printf("for"); break;
+        case KEYWORD_RETURN:
+            printf("return"); break;
+        case TOK_IDENTIFIER:
+            printf("ident (%s)", token->data.str); break;
+        case TOK_OPERATOR:
+            printf("%s", operators_str[token->data.op]); break;
+        case TOK_INTEGER_LITERAL:
+            printf("constant (%d)", token->data.integer); break;
+        case TOK_FLOAT_LITERAL:
+            printf("constant (%f)", token->data.fp); break;
+        case TOK_STRING_LITERAL:
+            printf("string (\"%s\")", token->data.str); break;
+        case TOK_OPEN_PARENTHESIS:
+            printf("("); break;
+        case TOK_CLOSE_PARENTHESIS:
+            printf(")"); break;
+        case TOK_OPEN_BRACE:
+            printf("{"); break;
+        case TOK_CLOSE_BRACE:
+            printf("}"); break;
+        case TOK_COMMA:
+            printf(","); break;
+        case TOK_SEMICOLON:
+            printf(";"); break;
+        case TOK_ASSIGNMENT_OP:
+            printf("="); break;
+
+        default:
+            printf("unknown (%d)\n", token->type); break;
+    }
+}
+
+int main()
+{
+    const char* filename = "program.dps";
+    const char* out_name = "out.dpa";
+
+    FILE *input = fopen(filename, "r");
+    fseek(input, 0, SEEK_END);
+    long fsize = ftell(input);
+    rewind(input);  /* same as rewind(f); */
+
+    if (fsize <= 0)
+    {
+        fprintf(stderr, "could not read input file '%s'", filename);
+        return -1;
+    }
+
+    uint8_t* source_buffer = malloc(fsize + 1);
+    fread(source_buffer, 1, fsize, input);
+    source_buffer[fsize] = '\0';
+    fclose(input);
+
+    token_t* token = tokenize_program(source_buffer, filename);
+    //token_t* token = tokenize_program(example_program, "<source>");
+    set_parser_token_list(token);
+
+    types_init();
+
+    program_t prog;
+    parse_program(&prog);
+
+    semanal_program(&prog);
+
+    print_program(&prog);
+
+    FILE* output = fop
+
+    out_stream = stdout;
+    generate_program(&prog);
+
+    cleanup_memory();
+}

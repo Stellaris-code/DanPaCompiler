@@ -1,0 +1,409 @@
+/*
+lexer.c
+
+Copyright (c) 14 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "lexer.h"
+#include "error.h"
+#include "dynarray.h"
+#include "alloc.h"
+
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <assert.h>
+
+const char* tokens_str[TOKEN_ENUM_END] =
+{
+    "<eof>",
+    "if",
+    "else",
+    "while",
+    "do",
+    "for",
+    "return",
+    "typedef",
+    "struct",
+    "asm",
+    "sizeof",
+    "<identifier>",
+    "<operator>",
+    "=",
+    "<integer constant>",
+    "<float constant>",
+    "<string constant>",
+    "(",
+    ")",
+    "{",
+    "}",
+    "[",
+    "]",
+    ",",
+    ":",
+    ";",
+    ".",
+    "->"
+};
+
+const char operators_str[OP_ENUM_END][4] =
+{
+    "+",
+    "-",
+    "*",
+    "/",
+    "%",
+    "==",
+    "!=",
+    ">",
+    ">=",
+    "<",
+    "<=",
+    "&&",
+    "||",
+    "&",
+    "|",
+    "^",
+    "++",
+    "--",
+    "&",
+    "!",
+    "~"
+};
+
+const char* match_operator(const char* ptr, token_t* tok)
+{
+    for (int i = 0; i < OP_ENUM_END; ++i)
+    {
+        const int len = strlen(operators_str[i]);
+        if (strncmp(ptr, operators_str[i], len) == 0)
+        {
+            tok->type = TOK_OPERATOR;
+            tok->data.op = (operator_type_t)i;
+
+            return ptr + len;
+        }
+    }
+
+    if (strncmp(ptr, "=", 1) == 0)
+    {
+        tok->type = TOK_ASSIGNMENT_OP;
+        return ptr + 1;
+    }
+
+    return NULL;
+}
+
+const char* match_keyword(const char* ptr, token_t* tok)
+{
+    if (strncmp(ptr, "if", 2) == 0 && !isalnum(ptr[2]))
+    {
+        tok->type = KEYWORD_IF;
+        return ptr + 2;
+    }
+    if (strncmp(ptr, "do", 2) == 0 && !isalnum(ptr[2]))
+    {
+        tok->type = KEYWORD_DO;
+        return ptr + 2;
+    }
+    if (strncmp(ptr, "for", 3) == 0 && !isalnum(ptr[3]))
+    {
+        tok->type = KEYWORD_FOR;
+        return ptr + 3;
+    }
+    if (strncmp(ptr, "asm", 3) == 0 && !isalnum(ptr[3]))
+    {
+        tok->type = KEYWORD_ASM;
+        return ptr + 3;
+    }
+    if (strncmp(ptr, "else", 4) == 0 && !isalnum(ptr[4]))
+    {
+        tok->type = KEYWORD_ELSE;
+        return ptr + 4;
+    }
+    if (strncmp(ptr, "while", 5) == 0 && !isalnum(ptr[5]))
+    {
+        tok->type = KEYWORD_WHILE;
+        return ptr + 5;
+    }
+    if (strncmp(ptr, "return", 6) == 0 && !isalnum(ptr[6]))
+    {
+        tok->type = KEYWORD_RETURN;
+        return ptr + 6;
+    }
+    if (strncmp(ptr, "struct", 6) == 0 && !isalnum(ptr[6]))
+    {
+        tok->type = KEYWORD_STRUCT;
+        return ptr + 6;
+    }
+    if (strncmp(ptr, "sizeof", 6) == 0 && !isalnum(ptr[6]))
+    {
+        tok->type = KEYWORD_SIZEOF;
+        return ptr + 6;
+    }
+    if (strncmp(ptr, "typedef", 7) == 0 && !isalnum(ptr[7]))
+    {
+        tok->type = KEYWORD_TYPEDEF;
+        return ptr + 7;
+    }
+
+    return NULL;
+}
+
+const char* match_identifier(const char* ptr, token_t* tok)
+{
+    const char* first_char = ptr;
+    int ident_len = 0;
+
+    // first character must be [a-zA-Z_]
+    if (!isalpha(*first_char) && *first_char != '_')
+    {
+        return NULL;
+    }
+
+    while (isalnum(*ptr) || *ptr == '_')
+    {
+        ++ident_len;
+        ++ptr;
+    }
+
+    char* token_ident_str = (char*)danpa_alloc(ident_len+1);
+    memcpy(token_ident_str, first_char, ident_len);
+    token_ident_str[ident_len] = '\0';
+
+    tok->type = TOK_IDENTIFIER;
+    tok->data.str = token_ident_str;
+
+    return ptr;
+}
+
+const char* match_number_literal(const char* ptr, token_t* tok)
+{
+    const char* start = ptr;
+    int literal_len = 0;
+    int is_float = 0;
+
+    // TODO : support hex numbers
+
+    while (isdigit(*ptr))
+    {
+        ++literal_len;
+        ++ptr;
+    }
+    if (*ptr == '.')
+    {
+        is_float = 1;
+        ++literal_len;
+        ++ptr;
+    }
+    while (isdigit(*ptr))
+    {
+        ++literal_len;
+        ++ptr;
+    }
+
+    // no digits found
+    if (ptr == start)
+        return NULL;
+
+    errno = 0;
+
+    if (!is_float)
+    {
+        char* endptr = NULL;
+        int number = strtol(start, &endptr, 0);
+        assert(errno == 0); // FIXME !!!
+
+        tok->type = TOK_INTEGER_LITERAL;
+        tok->data.integer = number;
+
+        return ptr;
+    }
+    else
+    {
+        char* endptr = NULL;
+        double number = strtod(start, &endptr);
+        assert(errno == 0); // FIXME !!!
+
+        tok->type = TOK_FLOAT_LITERAL;
+        tok->data.fp = number;
+
+        return ptr;
+    }
+}
+
+const char* match_string_literal(const char* ptr, token_t* tok)
+{
+    if (*ptr != '"')
+        return NULL;
+
+    ++ptr;
+    const char* literal_start = ptr;
+    const char* literal_end   = strchr(ptr, '"');
+    if (literal_end == NULL)
+        return NULL;
+    int literal_len = literal_end - literal_start;
+
+    char* tok_str = (char*)danpa_alloc(literal_len+1);
+
+    memcpy(tok_str, literal_start, literal_len);
+    tok_str[literal_len] = '\0';
+
+    tok->type = TOK_STRING_LITERAL;
+    tok->data.str = tok_str;
+
+    ptr = literal_end + 1;
+
+    return ptr;
+}
+
+const char* match_delimiter(const char* ptr, token_t* tok)
+{
+    if (strncmp(ptr, "(", 1) == 0)
+    {
+        tok->type = TOK_OPEN_PARENTHESIS;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, ")", 1) == 0)
+    {
+        tok->type = TOK_CLOSE_PARENTHESIS;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, "{", 1) == 0)
+    {
+        tok->type = TOK_OPEN_BRACE;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, "}", 1) == 0)
+    {
+        tok->type = TOK_CLOSE_BRACE;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, "[", 1) == 0)
+    {
+        tok->type = TOK_OPEN_BRACKET;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, "]", 1) == 0)
+    {
+        tok->type = TOK_CLOSE_BRACKET;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, ",", 1) == 0)
+    {
+        tok->type = TOK_COMMA;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, ":", 1) == 0)
+    {
+        tok->type = TOK_COLON;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, ";", 1) == 0)
+    {
+        tok->type = TOK_SEMICOLON;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, ".", 1) == 0)
+    {
+        tok->type = TOK_DOT;
+        return ptr + 1;
+    }
+    if (strncmp(ptr, "->", 2) == 0)
+    {
+        tok->type = TOK_ARROW;
+        return ptr + 2;
+    }
+
+    return NULL;
+}
+
+const char* consume_comment(const char* ptr)
+{
+    if (strncmp(ptr, "/*", 2) == 0)
+    {
+        while (*ptr && strncmp(ptr, "*/", 2) != 0)
+            ++ptr;
+        
+        return ptr;
+    }
+    else if (strncmp(ptr, "//", 2) == 0)
+    {
+        while (*ptr)
+    }
+}
+
+token_t *tokenize_program(const char *source, const char *filename)
+{
+    DYNARRAY(token_t) tokens;
+    DYNARRAY_INIT(tokens, 1024);
+
+    const char* ptr = source;
+    const char* line_start = ptr;
+    int current_line = 1;
+
+    while (*ptr)
+    {
+        while (*ptr == '\n')
+        {
+            ++current_line;
+            ++ptr;
+            line_start = ptr;
+        }
+
+        // skip all whitespace
+        while (isspace(*ptr))
+            ++ptr;
+
+        if (*ptr == '\0')
+            break;
+
+        token_t token;
+
+        const char* next;
+        if ((next = match_keyword(ptr, &token))        ||
+            (next = match_delimiter(ptr, &token))      ||
+            (next = match_identifier(ptr, &token))     ||
+            (next = match_operator(ptr, &token))       ||
+            (next = match_number_literal(ptr, &token)) ||
+            (next = match_string_literal(ptr, &token)))
+        {
+            token.filename = filename;
+            token.row = current_line;
+            token.col = ptr - line_start;
+
+            DYNARRAY_ADD(tokens, token);
+            ptr = next;
+        }
+        else
+        {
+            error(current_line, ptr - line_start, filename, "unexpected token '%c' (0x%x) found", ptr[0], ptr[0]);
+        }
+    }
+
+    token_t eof;
+    eof.type = TOKEN_EOF;
+    DYNARRAY_ADD(tokens, eof);
+
+    return tokens.ptr;
+}

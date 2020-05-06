@@ -1,109 +1,95 @@
 #include <stdio.h>
+#include <time.h>
 
 #include "lexer.h"
 #include "parser.h"
 #include "ast_printer.h"
 #include "code_generator.h"
+#include "semantic_pass.h"
+#include "ast_optimize.h"
+#include "asm_optimizer.h"
+#include "code_printer.h"
+#include "preprocessor.h"
+#include "alloc.h"
+#include "builtin.h"
+#include "file_read.h"
 
-const char* example_program =
-        "int main()\n"
-        "{\n"
-        //"   if (errno + EFAULT)\n"
-        //"       return format(\" test (%s)\", argc);\n"
-        "int tom;\n"
-        "int bob = 42;\n"
-        "if (bob == 42)\n"
-        "{\n"
-        "   bob = 53.4;\n"
-        "   int ted = 5*bob;\n"
-        "}\n"
-        "else if (bob == 54)\n"
-        "   tom = 28;\n"
-        "else\n"
-        "   bob = 66;\n"
-        "   return 1 + 2*bob + 3 == 585;\n"
-        //"invalid/ \n"
-        //"return 2*bob;\n"
-        "}";
+// TODO : mixin ! should be simple to implement
+// TODO : implement mutable inplace operators
+// TODO : have a 'primexpr_to_expr' type returning an initialized 'expression_t*'
 
-void print_token_type(token_t* token)
-{
-    switch (token->type)
-    {
-        case KEYWORD_IF:
-            printf("if"); break;
-        case KEYWORD_ELSE:
-            printf("else"); break;
-        case KEYWORD_WHILE:
-            printf("while"); break;
-        case KEYWORD_DO:
-            printf("do"); break;
-        case KEYWORD_FOR:
-            printf("for"); break;
-        case KEYWORD_RETURN:
-            printf("return"); break;
-        case TOK_IDENTIFIER:
-            printf("ident (%s)", token->data.str); break;
-        case TOK_OPERATOR:
-            printf("%s", operators_str[token->data.op]); break;
-        case TOK_INTEGER_LITERAL:
-            printf("constant (%d)", token->data.integer); break;
-        case TOK_FLOAT_LITERAL:
-            printf("constant (%f)", token->data.fp); break;
-        case TOK_STRING_LITERAL:
-            printf("string (\"%s\")", token->data.str); break;
-        case TOK_OPEN_PARENTHESIS:
-            printf("("); break;
-        case TOK_CLOSE_PARENTHESIS:
-            printf(")"); break;
-        case TOK_OPEN_BRACE:
-            printf("{"); break;
-        case TOK_CLOSE_BRACE:
-            printf("}"); break;
-        case TOK_COMMA:
-            printf(","); break;
-        case TOK_SEMICOLON:
-            printf(";"); break;
-        case TOK_ASSIGNMENT_OP:
-            printf("="); break;
-
-        default:
-            printf("unknown (%d)\n", token->type); break;
-    }
-}
+const char* example_program = ""
+                              "int collatz(int n)\n"
+                              "{\n"
+                              "if (n%2 == 0)\n"
+                              " return n/2;\n"
+                              "else\n"
+                              " return 3*n + 1;\n"
+                              "}\n"
+                              "void main()\n"
+                              "{\n"
+                              "int val = asm(\"syscall #1\":int);\n"
+                              "do{\n"
+                              "    val = collatz(val);\n"
+                              "    asm(\"syscall #0\", val);\n"
+                              "} while (val != 1);\n"
+                              "}";
 
 int main()
 {
-    token_t* token = tokenize_program(example_program, "<source>");
-    set_parser_token_list(token);
+    // don't use danpa_alloc, fool ! cleanup_memory will mess up the output !
+    setvbuf(stdout, malloc(16384), _IOFBF, 16384); // fully buffered stdout
 
-    while (token->type != TOKEN_EOF)
+    clock_t time_start, time_end;
+    time_start = clock();
+
+    const char* filename = "tests.dps";
+    //const char* filename = "program_shell.dps";
+    //const char* filename = "program_linkedlist.dps";
+    const char* out_name = "D:/Compiegne C++/Projets C++/DanpaAssembler/build/asm.dpa";
+
+    const char* source_buffer = (const char*)read_file(filename);
+    if (!source_buffer)
     {
-        printf("Token '");
-        print_token_type(token);
-        printf("'\n");
-
-        ++token;
+        fprintf(stderr, "could not read input file '%s'", filename);
+        return -1;
     }
 
-    DYNARRAY(struct { int a; int b; }) test;
-    DYNARRAY_INIT(test, 4);
-    DYNARRAY_ADD(test, {8, 2});
+    init_pp();
+    init_builtins();
 
-    DYNARRAY(int) test2;
-    DYNARRAY_INIT(test2, 4);
-    DYNARRAY_ADD(test2, 256);
+    token_list_t tokens;
+    DYNARRAY_INIT(tokens, 1024);
+    tokenize_program(&tokens, source_buffer, filename);
+    token_t eof;
+    eof.type = TOKEN_EOF;
+    DYNARRAY_ADD(tokens, eof);
 
+    set_parser_token_list(tokens.ptr);
 
-    typeof(*test.ptr) val = {8, 2};
-
-    printf("%d %d | %d\n", test.ptr[0].a, test.ptr[0].b, test2.ptr[0]);
-    printf("%d %d\n", val.a, val.b);
+    types_init();
 
     program_t prog;
     parse_program(&prog);
 
+    semanal_program(&prog);
+    for (int i = 0; i < 15; ++i) // multiple ast optimization passes
+         ast_optimize_program(&prog);
+
     print_program(&prog);
 
+    FILE* output = fopen(out_name, "wb");
+
     generate_program(&prog);
+    for (int i = 0; i < 15; ++i) // multiple asm optimization passes
+        optimize_asm(instruction_list);
+
+    print_code_output(instruction_list, output);
+
+    fclose(output);
+    cleanup_memory();
+
+    time_end = clock();
+    printf("elasped time : %ldms\n", (time_end - time_start) * 1000 / CLOCKS_PER_SEC);
+    fflush(stdout);
 }

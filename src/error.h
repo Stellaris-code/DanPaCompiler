@@ -25,7 +25,14 @@ SOFTWARE.
 #ifndef ERROR_H
 #define ERROR_H
 
-_Noreturn void error(int line, int row, const char* file, const char *fmt, ...);
-void warn (int line, int row, const char* file, const char* fmt, ...);
+#include "source_location.h"
+
+// use these to show multiple errors at once instead of aborting on the first error() call
+void error_begin();
+void error_end();
+
+void error(source_location_t where, int length, const char *fmt, ...);
+void warn (source_location_t where, int length, const char* fmt, ...);
+void info (source_location_t where, int length, const char* fmt, ...);
 
 #endif // ERROR_H

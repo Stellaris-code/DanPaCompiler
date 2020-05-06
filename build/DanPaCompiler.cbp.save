@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DanPaCompiler" />
+		<Option makefile_is_custom="1" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="CMake Files\;" />
+		<Build>
+			<Target title="all">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 all' />
+					<CompileFile command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;' />
+					<Clean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<DistClean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler">
+				<Option output="F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/DanPaCompiler.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="F:/Docs Yann/DanPaCompiler/DanPaCompiler/build" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="F:/Docs Yann/DanPaCompiler/DanPaCompiler/src/." />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32" />
+				</Compiler>
+				<MakeCommands>
+					<Build command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler' />
+					<CompileFile command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;' />
+					<Clean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<DistClean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler/fast">
+				<Option output="F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/DanPaCompiler.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="F:/Docs Yann/DanPaCompiler/DanPaCompiler/build" />
+				<Option object_output="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add directory="F:/Docs Yann/DanPaCompiler/DanPaCompiler/src/." />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward" />
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32" />
+				</Compiler>
+				<MakeCommands>
+					<Build command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler/fast' />
+					<CompileFile command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;' />
+					<Clean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<DistClean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 edit_cache' />
+					<CompileFile command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;' />
+					<Clean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<DistClean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 rebuild_cache' />
+					<CompileFile command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;' />
+					<Clean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<DistClean command='F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;F:/Docs Yann/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean' />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="../CMakeLists.txt">
+			<Option virtualFolder="CMake Files/" />
+		</Unit>
+		<Unit filename="../src/alloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/alloc.h" />
+		<Unit filename="../src/ast_functions.h" />
+		<Unit filename="../src/ast_nodes.h" />
+		<Unit filename="../src/ast_printer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/ast_printer.h" />
+		<Unit filename="../src/code_generator.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/code_generator.h" />
+		<Unit filename="../src/dynarray.h" />
+		<Unit filename="../src/error.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/error.h" />
+		<Unit filename="../src/lexer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/lexer.h" />
+		<Unit filename="../src/lvalue.c">
+			<Option compilerVar="CC" />
+			<Option target="DanPaCompiler" />
+			<Option target="DanPaCompiler/fast" />
+		</Unit>
+		<Unit filename="../src/lvalue.h">
+			<Option target="DanPaCompiler" />
+			<Option target="DanPaCompiler/fast" />
+		</Unit>
+		<Unit filename="../src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/parser.h" />
+		<Unit filename="../src/semantic_pass.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/semantic_pass.h" />
+		<Unit filename="../src/types.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/types.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,48 @@
+/*
+int collatz(int n)
+{
+	if (n%2 == 0)
+		return n/2;
+	else
+		return 3*n + 1;
+}
+void main()
+{
+	int val = asm("syscall #1":int);
+	asm("syscall #0", val);
+	// iterate until equal to 1
+	do
+	{
+		val = collatz(val);
+		asm("syscall #0", val);
+	} while (val != 1);
+	
+	for (int i = 0; i < 3+4; i = i+1)
+	{
+		;
+	}
+	real bruh = 3.14 * 2;
+	
+	asm("syscall #3"); // exit
+}
+
+*/
+
+
+int digit_sum(int n)
+{
+	int sum = 0;
+	while ((n % 10) != 0)
+	{
+		sum = sum + n % 10;
+		n = n / 10;
+	}		
+	return sum;
+}
+
+void main()
+{
+	int val = asm("syscall #1":int);
+	asm("syscall #0", digit_sum(val));
+	asm("syscall #3"); // exit
+}

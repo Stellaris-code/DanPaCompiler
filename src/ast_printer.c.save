@@ -1,0 +1,351 @@
+/*
+ast_printer.c
+
+Copyright (c) 19 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include <stdio.h>
+#include <stdarg.h>
+
+#include "ast_nodes.h"
+#include "ast_printer.h"
+#include "lexer.h"
+
+static int tab = 0;
+
+static void printf_tab(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    printf("%*s", 2*tab, ""); // print tab spaces
+    vprintf(fmt, args);
+
+    va_end(args);
+}
+
+#define AST_PASS_NAME print
+#include "ast_functions.h"
+
+// atoms
+static void print_ident(ident_t* ident)
+{
+    printf_tab("Identifier %s <%s, id %d>\n", ident->name->data.str, type_to_str(&ident->type), ident->local_id);
+}
+
+static void print_int_constant(token_t* value)
+{
+    printf_tab("Integer %d\n", value->data.integer);
+}
+
+static void print_float_constant(token_t* value)
+{
+    printf_tab("Float %f\n", value->data.fp);
+}
+
+static void print_string_literal(token_t* value)
+{
+    printf_tab("String \"%s\"\n", value->data.str);
+}
+
+AST_PROGRAM()
+{
+    printf_tab("Program :\n", "");
+    AST_PROGRAM_PROCESS();
+}
+
+AST_TYPE()
+{
+    ++tab;
+
+    printf_tab("Type %s \n", type_to_str(arg_type));
+
+    --tab;
+}
+
+AST_FUNCTION()
+{
+    ++tab;
+    printf_tab("Function %s %s(", type_to_str(&arg_function->signature.ret_type), arg_function->name->data.str);
+    for (int i = 0; i < arg_function->signature.parameter_types.size; ++i)
+    {
+        printf("%s", type_to_str(&arg_function->signature.parameter_types.ptr[i]));
+        if (i != (arg_function->signature.parameter_types.size - 1))
+            printf(", ");
+    }
+    printf(")\n");
+    ++tab;
+    for (int i = 0; i < arg_function->args.size; ++i)
+    {
+        parameter_t param = arg_function->args.ptr[i];
+        printf_tab("Argument %s %s\n", type_to_str(&param.type), param.name->data.str);
+    }
+    --tab;
+
+    AST_FUNCTION_PROCESS();
+
+    --tab;
+}
+
+AST_RETURN_STATEMENT()
+{
+    ++tab;
+
+    printf_tab("Return statement :\n");
+    AST_RETURN_STATEMENT_PROCESS();
+
+    --tab;
+}
+
+AST_WHILE_STATEMENT()
+{
+    ++tab;
+
+    printf_tab("While statement :\n");
+    AST_WHILE_STATEMENT_PROCESS_1();
+    AST_WHILE_STATEMENT_PROCESS_2();
+
+    --tab;
+}
+
+AST_DO_WHILE_STATEMENT()
+{
+    ++tab;
+
+    printf_tab("Do-while statement :\n");
+    AST_DO_WHILE_STATEMENT_PROCESS_1();
+    AST_DO_WHILE_STATEMENT_PROCESS_2();
+
+    --tab;
+}
+
+AST_IF_STATEMENT()
+{
+    ++tab;
+
+    printf_tab("If :\n");
+    AST_IF_STATEMENT_PROCESS_1();
+    printf_tab("Then :\n");
+    AST_IF_STATEMENT_PROCESS_2();
+
+    if (arg_if_statement->else_statement)
+    {
+        printf_tab("Else:\n");
+        AST_IF_STATEMENT_PROCESS_3();
+    }
+
+    --tab;
+}
+
+AST_ASM_EXPR()
+{
+    ++tab;
+
+    printf_tab("Asm code : \n");
+    printf_tab("---\n"),
+    printf("%s\n", arg_asm_expr->asm_code);
+
+    --tab;
+}
+
+AST_TYPEDEF_DECLARATION()
+{
+    ++tab;
+
+    printf_tab("Typedef %s = %s\n", arg_typedef_declaration->name->data.str, type_to_str(&arg_typedef_declaration->type));
+    AST_TYPEDEF_DECLARATION_PROCESS();
+
+    --tab;
+}
+
+AST_VARIABLE_DECLARATION()
+{
+    ++tab;
+
+    printf_tab("Declaration %s of type %s\n", arg_variable_declaration->name->data.str, type_to_str(&arg_variable_declaration->type));
+    AST_VARIABLE_DECLARATION_PROCESS();
+
+    --tab;
+}
+
+AST_STRUCT_DECLARATION()
+{
+    ++tab;
+    printf_tab("Structure %s (size : %d)\n", arg_struct_declaration->structure.name->data.str, arg_struct_declaration->structure.byte_size);
+    ++tab;
+
+    for (int i = 0; i < arg_struct_declaration->structure.fields.size; ++i)
+    {
+        structure_field_t field = arg_struct_declaration->structure.fields.ptr[i];
+        printf_tab("Field %s %s (size %d, offset %d)\n",type_to_str(&field.type), field.name->data.str, field.byte_size, field.offset);
+    }
+
+    --tab;
+    AST_STRUCT_DECLARATION_PROCESS();
+    --tab;
+}
+
+AST_DECLARATION()
+{
+    ++tab;
+
+    AST_DECLARATION_PROCESS();
+
+    --tab;
+}
+
+AST_ASSIGNMENT()
+{
+    AST_ASSIGNMENT_PROCESS_1();
+    ++tab;
+    printf_tab("=\n");
+    --tab;
+    AST_ASSIGNMENT_PROCESS_2();
+}
+
+AST_COMPOUND_STATEMENT()
+{
+    AST_COMPOUND_STATEMENT_PROCESS();
+}
+
+AST_STATEMENT()
+{
+    ++tab;
+    AST_STATEMENT_PROCESS();
+    --tab;
+}
+
+AST_BINOP()
+{
+    ++tab;
+
+    printf_tab("Binop :\n");
+    AST_BINOP_PROCESS_1();
+    printf_tab("'%s' \n", operators_str[arg_binop->op->data.op]);
+    AST_BINOP_PROCESS_2();
+
+    --tab;
+}
+
+AST_ARRAY_SUBSCRIPT()
+{
+    ++tab;
+
+    printf_tab("Array access : \n");
+    AST_ARRAY_SUBSCRIPT_PROCESS_1();
+    printf_tab("Index :\n");
+    AST_ARRAY_SUBSCRIPT_PROCESS_2();
+
+    --tab;
+}
+
+AST_STRUCT_ACCESS()
+{
+    ++tab;
+
+    printf_tab("Field access '%s' :\n", arg_struct_access->field_name->data.str);
+    AST_STRUCT_ACCESS_PROCESS();
+
+    --tab;
+}
+
+AST_DEREF_EXPR()
+{
+    ++tab;
+
+    printf_tab("Pointer dereference :\n");
+    AST_DEREF_EXPR_PROCESS();
+
+    --tab;
+}
+
+AST_ADDR_EXPR()
+{
+    ++tab;
+
+    printf_tab("Address get :\n");
+    AST_ADDR_EXPR_PROCESS();
+
+    --tab;
+}
+
+AST_SIZEOF_EXPR()
+{
+    ++tab;
+
+    printf_tab("Sizeof :\n");
+    AST_SIZEOF_EXPR_PROCESS();
+
+    --tab;
+}
+
+AST_UNARY_EXPRESSION()
+{
+    ++tab;
+
+    printf_tab("Unary expr :\n");
+    printf_tab("'%s'\n", operators_str[arg_unary_expr->unary_op->data.op]);
+
+    AST_UNARY_EXPRESSION_PROCESS();
+
+    --tab;
+}
+
+AST_FUNC_CALL_EXPRESSION()
+{
+    ++tab;
+
+    printf_tab("Function call : '%s'\n", arg_function_call->func_name.name->data.str);
+    AST_FUNC_CALL_EXPRESSION_PROCESS();
+
+    --tab;
+}
+
+AST_CAST_EXPRESSION()
+{
+    ++tab;
+
+    printf_tab("Casting to type '<%s>'\n", type_to_str(&arg_cast_expression->target_type));
+    AST_CAST_EXPRESSION_PROCESS();
+
+    --tab;
+}
+
+AST_PRIM_EXPRESSION()
+{
+    ++tab;
+
+    AST_PRIM_EXPRESSION_PROCESS();
+
+    --tab;
+}
+
+AST_EXPRESSION()
+{
+    ++tab;
+
+    printf_tab("Expr of type %s\n", type_to_str(&arg_expression->value_type));
+    AST_EXPRESSION_PROCESS();
+
+    --tab;
+}
+

@@ -1,0 +1,369 @@
+/*
+code_generator.c
+
+Copyright (c) 24 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "code_generator.h"
+#include "lexer.h"
+#include "error.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#define AST_PASS_NAME generate
+#include "ast_functions.h"
+
+#define LABEL_MAX_LEN 16
+
+static const char binop_opcodes[DEFAULT_TYPES_END][OP_BIN_END][8] =
+{
+    // INT
+    {"add",     "sub",  "mul",  "idiv",  "mod",  "eq", "neq",  "gt",  "ge",  "lt",  "le",  "andl",   "orl",  "and", "or", "xor"},
+    // FLOAT
+    {"fadd",    "fsub", "fmul", "fdiv", "fmod", "feq", "fneq", "fgt", "fge", "flt", "fle", "invl", "invl", "invl", "invl", "invl"},
+    // STR
+    {"strcat",  "invl", "invl", "invl", "invl", "streq", "strneq", "strgt", "strge", "strlt", "strle", "invl", "invl", "invl", "invl", "invl"},
+};
+
+static const char unary_opcodes[DEFAULT_TYPES_END][OP_UNARY_END - OP_BIN_END][8] =
+{
+    // INT
+    {"inc",  "dec",  "invl",  "notl",  "not"},
+    // FLOAT
+    {"inc",  "dec",  "invl",  "invl",  "invl"},
+    // STR
+    {"invl", "invl",  "invl",  "invl",  "invl"},
+};
+
+static void generate(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+
+    printf("%*s", 2*tab, ""); // print tab spaces
+    vfprintf(out_strfmt, args);
+
+    va_end(args);
+}
+
+static int label_counter;
+static int address_calc_mode;
+static inline void generate_label(char* buf)
+{
+    snprintf(buf, LABEL_MAX_LEN, "L%x", label_counter++);
+}
+// atoms
+static void generate_ident(ident_t* ident)
+{
+    if (ident->global)
+        printf("pushg %d // %s\n", ident->global_id, ident->name->data.str);
+    else
+        printf("pushl %d // %s\n", ident->local_id, ident->name->data.str);
+}
+static void generate_int_constant(token_t* val)
+{
+    printf("pushi #%d\n", val->data.integer);
+}
+static void generate_float_constant(token_t* val)
+{
+    printf("pushf #%f\n", val->data.fp);
+}
+static void generate_string_literal(token_t* val)
+{
+    printf("pushs \"%s\"\n", val->data.str);
+}
+
+AST_PROGRAM()
+{
+    AST_PROGRAM_PROCESS();
+}
+
+AST_FUNCTION()
+{
+    printf("%s:\n", arg_function->name->data.str);
+
+    // fetch the parameters on the stack into the matching local variables
+    // in reverse order : stack is right-to-left, local variables are left-to-right
+    for (int i = arg_function->args.size - 1; i >= 0; --i)
+    {
+        printf("movl %d // get '%s'\n", i, arg_function->args.ptr[i].name->data.str);
+    }
+
+    AST_FUNCTION_PROCESS();
+
+    printf("ret\n");
+}
+
+AST_TYPE()
+{
+
+}
+
+AST_RETURN_STATEMENT()
+{
+    AST_RETURN_STATEMENT_PROCESS();
+    printf("ret\n");
+}
+
+AST_ASSIGNMENT()
+{
+    if (arg_assignment->var.type != IDENT)
+    {
+        address_calc_mode = 1;
+        AST_ASSIGNMENT_PROCESS_1();
+        address_calc_mode = 0;
+    }
+
+    AST_ASSIGNMENT_PROCESS_2();
+
+    type_t assign_type = get_prim_expr_type(&arg_assignment->var);
+    if (arg_assignment->var.type == IDENT)
+    {
+        if (!is_struct(&arg_assignment->var.ident.type)) // the easy part
+        {
+            if (arg_assignment->var.ident.global)
+                printf("movg %d // %s = *sp\n", arg_assignment->var.ident.global_id, arg_assignment->var.ident.name->data.str);
+            else
+                printf("movl %d // %s = *sp\n", arg_assignment->var.ident.local_id,  arg_assignment->var.ident.name->data.str);
+        }
+        else
+        {
+            if (arg_assignment->var.ident.global)
+                printf("pushg %d // %s = *sp\n", arg_assignment->var.ident.global_id, arg_assignment->var.ident.name->data.str);
+            else
+                printf("pushl %d // %s = *sp\n", arg_assignment->var.ident.local_id,  arg_assignment->var.ident.name->data.str);
+            printf("copy #%d\n", sizeof_type(&assign_type));
+        }
+    }
+    else
+    {
+        if (!is_struct(&assign_type)) // the easy part
+        {
+            printf("ptrset\n");
+        }
+        else
+        {
+            printf("copy #%d\n", sizeof_type(&assign_type));
+        }
+    }
+}
+
+AST_IF_STATEMENT()
+{
+    char else_label[LABEL_MAX_LEN];
+    char out_label [LABEL_MAX_LEN];
+    generate_label(else_label);
+    generate_label(out_label );
+
+    AST_IF_STATEMENT_PROCESS_1();
+    printf("test\n");
+    printf("jf .%s\n", else_label);
+
+    AST_IF_STATEMENT_PROCESS_2();
+    printf("jmp .%s\n", out_label);
+
+    printf(".%s:\n", else_label);
+    AST_IF_STATEMENT_PROCESS_3();
+
+    printf(".%s:\n", out_label);
+}
+
+AST_WHILE_STATEMENT()
+{
+    char early_out_label[LABEL_MAX_LEN];
+    char loop_label[LABEL_MAX_LEN];
+    generate_label(early_out_label);
+    generate_label(loop_label);
+
+    printf(".%s:\n", loop_label);
+
+    AST_WHILE_STATEMENT_PROCESS_1();
+    printf("test\n");
+    printf("jf .%s\n", early_out_label);
+
+    AST_WHILE_STATEMENT_PROCESS_2();
+    printf("jmp .%s\n", loop_label);
+
+    printf(".%s:\n", early_out_label);
+}
+
+AST_DO_WHILE_STATEMENT()
+{
+    char loop_label[LABEL_MAX_LEN];
+    generate_label(loop_label);
+
+    printf(".%s:\n", loop_label);
+
+    AST_DO_WHILE_STATEMENT_PROCESS_1();
+    AST_DO_WHILE_STATEMENT_PROCESS_2();
+    printf("test\n");
+
+    printf("jt .%s\n", loop_label);
+}
+
+AST_COMPOUND_STATEMENT()
+{
+    AST_COMPOUND_STATEMENT_PROCESS();
+}
+
+AST_ASM_EXPR()
+{
+    AST_ASM_EXPR_PROCESS();
+
+    printf("%s\n", arg_asm_expr->asm_code);
+}
+
+AST_STATEMENT()
+{
+    AST_STATEMENT_PROCESS();
+    if (arg_statement->type == DISCARDED_EXPRESSION)
+    {
+        type_t void_type = mk_type(VOID);
+        if (arg_statement->expression.kind == PRIM_EXPR && arg_statement->expression.prim_expr.type == ASM_EXPR && cmp_types(&arg_statement->expression.prim_expr.asm_expr.ret_type, &void_type))
+        {
+            // asm expressions with type void don't push any value
+        }
+        else
+        {
+            printf("pop\n"); // discard pushed expression
+        }
+    }
+}
+
+AST_TYPEDEF_DECLARATION()
+{
+    AST_TYPEDEF_DECLARATION_PROCESS();
+}
+
+AST_VARIABLE_DECLARATION()
+{
+    // allocate struct space, and mark as managed
+    if (is_struct(&arg_variable_declaration->type))
+    {
+        printf("alloc #%d\n", sizeof_type(&arg_variable_declaration->type));
+        if (arg_variable_declaration->global)
+            printf("movgmngd %d\n", arg_variable_declaration->var_id);
+        else
+            printf("movlmngd %d\n", arg_variable_declaration->var_id);
+    }
+    AST_VARIABLE_DECLARATION_PROCESS();
+}
+
+AST_STRUCT_DECLARATION()
+{
+    AST_STRUCT_DECLARATION_PROCESS();
+}
+
+AST_DECLARATION()
+{
+    AST_DECLARATION_PROCESS();
+}
+
+AST_BINOP()
+{
+    AST_BINOP_PROCESS_1();
+    AST_BINOP_PROCESS_2();
+
+    printf("%s\n", binop_opcodes[arg_binop->left.value_type.base_type][arg_binop->op->data.op]);
+}
+
+AST_FUNC_CALL_EXPRESSION()
+{
+    AST_FUNC_CALL_EXPRESSION_PROCESS();
+
+    printf("call %s\n", arg_function_call->func_name.name->data.str);
+}
+
+AST_ARRAY_SUBSCRIPT()
+{
+    AST_ARRAY_SUBSCRIPT_PROCESS_1(); // array to access
+    AST_ARRAY_SUBSCRIPT_PROCESS_2(); // index
+    printf("add\n");
+    if (!address_calc_mode)
+        printf("ptrget\n");
+}
+
+AST_STRUCT_ACCESS()
+{
+    AST_STRUCT_ACCESS_PROCESS();
+    if (arg_struct_access->indirect_access)
+        printf("deref // ->\n");
+    printf("pushi #%d // %s\n", arg_struct_access->field->offset, arg_struct_access->field_name->data.str);
+    if (!address_calc_mode)
+        printf("ptrget\n");
+}
+
+AST_DEREF_EXPR()
+{
+    AST_DEREF_EXPR_PROCESS();
+    if (!address_calc_mode)
+        printf("ptrget\n");
+}
+
+AST_ADDR_EXPR()
+{
+    // treat direct variables as a special case
+    if (arg_addr_expr->addr_expr->type == IDENT)
+    {
+        if (arg_addr_expr->addr_expr->ident.global)
+            printf("getaddrg %d // %s\n", arg_addr_expr->addr_expr->ident.global_id, arg_addr_expr->addr_expr->ident.name->data.str);
+        else
+            printf("getaddrl %d // %s\n", arg_addr_expr->addr_expr->ident.local_id,  arg_addr_expr->addr_expr->ident.name->data.str);
+    }
+    else
+    {
+        address_calc_mode = 1;
+        AST_ADDR_EXPR_PROCESS();
+        address_calc_mode = 0;
+    }
+}
+
+AST_SIZEOF_EXPR()
+{
+    printf("pushi #%d // sizeof(%s)\n", sizeof_type(&arg_sizeof_expr->type), type_to_str(&arg_sizeof_expr->type));
+}
+
+AST_UNARY_EXPRESSION()
+{
+    AST_UNARY_EXPRESSION_PROCESS();
+
+    printf("unary %s\n", operators_str[arg_unary_expr->unary_op->data.op]);
+}
+
+AST_CAST_EXPRESSION()
+{
+    AST_CAST_EXPRESSION_PROCESS();
+    printf("cast <%s>\n", type_to_str(&arg_cast_expression->target_type));
+}
+
+AST_PRIM_EXPRESSION()
+{
+    AST_PRIM_EXPRESSION_PROCESS();
+}
+
+AST_EXPRESSION()
+{
+    AST_EXPRESSION_PROCESS();
+}

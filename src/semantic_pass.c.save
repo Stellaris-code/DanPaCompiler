@@ -1,0 +1,421 @@
+/*
+semantic_pass.c
+
+Copyright (c) 26 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "semantic_pass.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <assert.h>
+#include "error.h"
+#include "lvalue.h"
+
+#define AST_PASS_NAME semanal
+#include "ast_functions.h"
+
+static int in_function;
+static int nest_depth;
+static function_t* current_function = NULL;
+static program_t*  current_program  = NULL;
+
+// FIXME : at the end of a compound statement, mark outlived variables as invalid
+// wtf is this fixme ? to current day me, it seems okay
+static local_variable_t* find_local(ident_t* ident, int* id)
+{
+    if (current_function == NULL)
+        return NULL;
+
+    for (int i = 0; i < current_function->locals.size; ++i)
+    {
+        local_variable_t* item = &current_function->locals.ptr[i];
+        if (item->nest_depth <= nest_depth && strcmp(item->ident.name->data.str, ident->name->data.str) == 0) // FIXME : wtf it won't work idiot
+        {
+            *id = i;
+            return item;
+        }
+    }
+    return NULL;
+}
+
+static global_variable_t* find_global(ident_t* ident, int* id)
+{
+    for (int i = 0; i < current_program->globals.size; ++i)
+    {
+        global_variable_t* item = &current_program->globals.ptr[i];
+        if (strcmp(item->ident.name->data.str, ident->name->data.str) == 0)
+        {
+            *id = i;
+            return item;
+        }
+    }
+    return NULL;
+}
+
+static function_t* find_function(ident_t* ident)
+{
+    for (int i = 0; i < current_program->function_list.size; ++i)
+    {
+        function_t* item = &current_program->function_list.ptr[i];
+        if (strcmp(item->name->data.str, ident->name->data.str) == 0)
+        {
+            return item;
+        }
+    }
+    return NULL;
+}
+
+static void generate_type_conversion(token_t* where, expression_t* in, const type_t* target)
+{
+    if (!cmp_types(&in->value_type, target))
+    {
+        if (!can_implicit_cast(&in->value_type, target))
+        {
+            error(where->row, where->col, where->filename,
+                  "cannot implicitly cast '%s' to '%s'\n", type_to_str(&in->value_type), type_to_str(target));
+        }
+
+        expression_t* new_expression = (expression_t*)danpa_alloc(sizeof(expression_t));
+        *new_expression = *in; // copy current expression
+
+        // reuse 'in' to store the new cast expression
+        in->kind = PRIM_EXPR;
+        in->value_type = *target;
+        primary_expression_t* cast_prim_expr = &in->prim_expr;
+        primary_expression_t* target_prim_exp = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+        cast_prim_expr->type = CAST_EXPRESSION;
+        cast_prim_expr->cast_expr.target_type = *target;
+        cast_prim_expr->cast_expr.expr = target_prim_exp;
+
+        target_prim_exp->type = ENCLOSED;
+        target_prim_exp->expr = new_expression;
+    }
+}
+
+// atoms
+static void semanal_ident(ident_t* ident)
+{
+    int id;
+    local_variable_t* local;
+    global_variable_t* global;
+    if ((local = find_local(ident, &id)))
+    {
+        ident->type = local->ident.type;
+        ident->global = 0;
+        ident->local_id = id;
+    }
+    else if ((global = find_global(ident, &id)))
+    {
+        ident->type = global->ident.type;
+        ident->global = 1;
+        ident->global_id = id;
+    }
+    else
+    {
+        error(ident->name->row, ident->name->col, ident->name->filename, "unknown identifier '%s'\n", ident->name->data.str);
+    }
+}
+static void semanal_int_constant(token_t* val)
+{
+}
+static void semanal_float_constant(token_t* val)
+{
+}
+static void semanal_string_literal(token_t* name)
+{
+}
+
+AST_PROGRAM()
+{
+    current_program = arg_program;
+    DYNARRAY_INIT(current_program->globals, 32);
+    AST_PROGRAM_PROCESS();
+}
+
+AST_FUNCTION()
+{
+    in_function = 1;
+    current_function = arg_function;
+    DYNARRAY_INIT(current_function->locals, 16);
+
+    // Declare the parameters as local variables
+    for (int i = 0; i < arg_function->args.size; ++i)
+    {
+        parameter_t param = arg_function->args.ptr[i];
+        local_variable_t param_local;
+        param_local.ident.name = param.name;
+        param_local.ident.type = param.type;
+        param_local.nest_depth = 0;
+
+        DYNARRAY_ADD(current_function->locals, param_local);
+    }
+
+    AST_FUNCTION_PROCESS();
+
+    in_function = 0;
+}
+
+AST_TYPE()
+{
+
+    AST_TYPE_PROCESS();
+    if (arg_type->kind == ARRAY)
+    {
+        type_t int_type = mk_type(INT);
+        if (!can_implicit_cast(&arg_type->array.initial_size->value_type, &int_type))
+        {
+            token_t* tok = arg_type->token;
+            error(tok->row, tok->col + 1, tok->filename, "invalid array size type : %s\n", type_to_str(&arg_type->array.initial_size->value_type));
+        }
+    }
+
+}
+
+AST_RETURN_STATEMENT()
+{
+    AST_RETURN_STATEMENT_PROCESS();
+}
+
+AST_ASSIGNMENT()
+{
+    if (!is_lvalue(&arg_assignment->var))
+        error(arg_assignment->eq_token->row, arg_assignment->eq_token->col, arg_assignment->eq_token->filename, "Assigned expression is not an lvalue\n");
+
+    AST_ASSIGNMENT_PROCESS_1();
+    AST_ASSIGNMENT_PROCESS_2();
+
+    type_t assign_type = get_prim_expr_type(&arg_assignment->var);
+    generate_type_conversion(arg_assignment->var.ident.name, &arg_assignment->expr, &assign_type);
+}
+
+AST_IF_STATEMENT()
+{
+    AST_IF_STATEMENT_PROCESS_1();
+    AST_IF_STATEMENT_PROCESS_2();
+    AST_IF_STATEMENT_PROCESS_3();
+}
+
+AST_WHILE_STATEMENT()
+{
+    AST_WHILE_STATEMENT_PROCESS_1();
+    AST_WHILE_STATEMENT_PROCESS_2();
+}
+
+AST_DO_WHILE_STATEMENT()
+{
+    AST_DO_WHILE_STATEMENT_PROCESS_1();
+    AST_DO_WHILE_STATEMENT_PROCESS_2();
+}
+
+AST_COMPOUND_STATEMENT()
+{
+    ++nest_depth;
+    AST_COMPOUND_STATEMENT_PROCESS();
+    --nest_depth;
+}
+
+AST_ASM_EXPR()
+{
+    AST_ASM_EXPR_PROCESS();
+}
+
+AST_SIZEOF_EXPR()
+{
+    AST_SIZEOF_EXPR_PROCESS();
+    if (arg_sizeof_expr->is_expr)
+        arg_sizeof_expr->type = arg_sizeof_expr->expr->value_type;
+}
+
+AST_STATEMENT()
+{
+    AST_STATEMENT_PROCESS();
+}
+
+AST_TYPEDEF_DECLARATION()
+{
+    AST_TYPEDEF_DECLARATION_PROCESS();
+}
+
+AST_VARIABLE_DECLARATION()
+{
+    if (in_function)
+    {
+        local_variable_t local;
+        local.ident.name = arg_variable_declaration->name;
+        local.ident.type = arg_variable_declaration->type;
+        local.nest_depth = nest_depth;
+        DYNARRAY_ADD(current_function->locals, local);
+        arg_variable_declaration->var_id = current_function->locals.size-1;
+        arg_variable_declaration->global = 0;
+    }
+    else
+    {
+        global_variable_t global;
+        global.ident.name = arg_variable_declaration->name;
+        global.ident.type = arg_variable_declaration->type;
+        DYNARRAY_ADD(current_program->globals, global);
+        arg_variable_declaration->var_id = current_program->globals.size-1;
+        arg_variable_declaration->global = 1;
+    }
+
+    AST_VARIABLE_DECLARATION_PROCESS(); // accept assignments only for local variables
+}
+
+AST_STRUCT_DECLARATION()
+{
+    AST_STRUCT_DECLARATION_PROCESS();
+}
+
+AST_DECLARATION()
+{
+    AST_DECLARATION_PROCESS();
+}
+
+AST_BINOP()
+{
+    AST_BINOP_PROCESS_1();
+    AST_BINOP_PROCESS_2();
+
+    if (!can_implicit_cast(&arg_binop->left.value_type, &arg_binop->right.value_type))
+    {
+        error(arg_binop->op->row, arg_binop->op->col, arg_binop->op->filename, "cannot do '%s' with '%s' and '%s'\n", operators_str[arg_binop->op->data.op],
+              type_to_str(&arg_binop->left.value_type), type_to_str(&arg_binop->right.value_type));
+    }
+
+    generate_type_conversion(arg_binop->op, &arg_binop->right, &arg_binop->left.value_type);
+}
+
+AST_FUNC_CALL_EXPRESSION()
+{
+    token_t* name_tok = arg_function_call->func_name.name;
+    function_t* func = find_function(&arg_function_call->func_name);
+    if (func == NULL)
+        error(name_tok->row, name_tok->col, name_tok->filename, "function '%s' is undefined\n", name_tok->data.str);
+    if (arg_function_call->arguments.size != func->signature.parameter_types.size)
+        error(name_tok->row, name_tok->col, name_tok->filename, "invalid parameter count for '%s' : expected %d, got %d\n", name_tok->data.str,
+              func->signature.parameter_types.size, arg_function_call->arguments.size);
+
+    arg_function_call->called_func = func;
+    AST_FUNC_CALL_EXPRESSION_PROCESS();
+
+    for (int i = 0; i < func->signature.parameter_types.size; ++i)
+    {
+        generate_type_conversion(name_tok, arg_function_call->arguments.ptr[i], &func->signature.parameter_types.ptr[i]);
+    }
+}
+
+AST_ARRAY_SUBSCRIPT()
+{
+    AST_ARRAY_SUBSCRIPT_PROCESS_1();
+    type_t array_type = get_prim_expr_type(arg_array_subscript->array_expr);
+    if (array_type.kind != ARRAY)
+        error(arg_array_subscript->bracket_token->row, arg_array_subscript->bracket_token->col, arg_array_subscript->bracket_token->filename,
+              "type '%s' is not an array\n", type_to_str(&array_type));
+    AST_ARRAY_SUBSCRIPT_PROCESS_2();
+}
+
+AST_DEREF_EXPR()
+{
+    AST_DEREF_EXPR_PROCESS();
+    type_t type = get_prim_expr_type(arg_deref_expr->pointer_expr);
+    if (type.kind != POINTER)
+    {
+        error(arg_deref_expr->asterisk_token->row, arg_deref_expr->asterisk_token->col, arg_deref_expr->asterisk_token->filename, "type %s is not a pointer\n", type_to_str(&type));
+    }
+}
+
+AST_ADDR_EXPR()
+{
+    AST_ADDR_EXPR_PROCESS();
+
+    if (!is_lvalue(arg_addr_expr->addr_expr))
+    {
+        error(arg_addr_expr->addr_token->row, arg_addr_expr->addr_token->col, arg_addr_expr->addr_token->filename, "Cannot get the address of a rvalue\n");
+    }
+}
+
+AST_STRUCT_ACCESS()
+{
+    AST_STRUCT_ACCESS_PROCESS();
+    type_t expr_type = get_prim_expr_type(arg_struct_access->struct_expr);
+    if (arg_struct_access->indirect_access)
+    {
+        if (expr_type.kind != POINTER)
+        {
+            error(arg_struct_access->op_token->row, arg_struct_access->op_token->col, arg_struct_access->op_token->filename, "type %s is not a pointer\n", type_to_str(&expr_type));
+        }
+        expr_type = *expr_type.pointer.pointed_type;
+    }
+
+    if (!is_struct(&expr_type))
+    {
+        error(arg_struct_access->op_token->row, arg_struct_access->op_token->col, arg_struct_access->op_token->filename, "type %s is not a struct\n", type_to_str(&expr_type));
+    }
+    const structure_t* struct_type = get_struct(&expr_type);
+    const structure_field_t* field = NULL;
+    for (int i = 0; i < struct_type->fields.size; ++i)
+    {
+        if (strcmp(arg_struct_access->field_name->data.str, struct_type->fields.ptr[i].name->data.str) == 0)
+            field = &struct_type->fields.ptr[i];
+    }
+    if (field == NULL)
+    {
+        error(arg_struct_access->op_token->row, arg_struct_access->op_token->col, arg_struct_access->op_token->filename, "type %s has no field named %s\n", type_to_str(&expr_type), arg_struct_access->field_name->data.str);
+    }
+
+    arg_struct_access->field = field;
+    arg_struct_access->value_type = field->type;
+}
+
+AST_UNARY_EXPRESSION()
+{
+    type_t int_type = mk_type(INT);
+    
+    AST_UNARY_EXPRESSION_PROCESS();
+    if (!cmp_types(get_prim_expr_type(arg_unary_expr->u)))
+}
+
+AST_CAST_EXPRESSION()
+{
+    type_t from   = get_prim_expr_type(arg_cast_expression->expr);
+    type_t to     = arg_cast_expression->target_type;
+    token_t* where = arg_cast_expression->cast_type_token;
+    if (!can_explicit_cast(&from, &to))
+    {
+        error(where->row, where->col, where->filename,
+              "cannot cast '%s' to '%s'\n", type_to_str(&from), type_to_str(&to));
+    }
+    AST_CAST_EXPRESSION_PROCESS();
+}
+
+AST_PRIM_EXPRESSION()
+{
+    AST_PRIM_EXPRESSION_PROCESS();
+}
+
+AST_EXPRESSION()
+{
+    AST_EXPRESSION_PROCESS();
+
+    arg_expression->value_type = get_expression_type(arg_expression);
+}

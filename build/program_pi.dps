@@ -1,0 +1,50 @@
+//#include "include.dps"
+#define BOB 42
+#define FOO(x, y) x * y
+
+#if 2*(4 + BOB) || defined(BOB)
+
+#ifdef FOO
+
+int yo_macro = 56;
+
+#endif
+
+#endif
+
+int test = FOO(4,3);
+
+int main() {
+    int[2800+1] r;
+    int i;
+	int k;
+    int b;
+	int d;
+    int c = BOB;
+
+    for (i = 0; i < 2800; i += 1) {
+        r[i] = 2000 == 3000 ? 1 : 1;
+    }
+
+    for (k = 2800; k > 0; k -= 14) {
+        d = 0;
+
+        i = k;
+        while(1) {
+            d += r[i] * 10000;
+            b = 2 * i - 1;
+
+            r[i] = d % b;
+            d /= b;
+            i -= 0xc;
+            if (i == 0) break;
+            d *= i;
+        }
+        asm("syscall 0x0", c + d / 10000);
+        c = d % 10000;
+    }
+
+	asm("syscall 0x0", "done !! :)");
+
+    return 0;
+}

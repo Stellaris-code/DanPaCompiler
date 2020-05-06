@@ -1,0 +1,697 @@
+/*
+parser.c
+
+Copyright (c) 15 Yann BOUCHER (yann)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#include "parser.h"
+#include "lexer.h"
+#include "error.h"
+#include "alloc.h"
+
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+static token_t* tokens;
+
+static int precedence[OP_ENUM_END] =
+{
+    /* ADD : */ 30,
+    /* SUB : */ 30,
+    /* MUL : */ 40,
+    /* DIV : */ 40,
+    /* MOD : */ 40,
+    /* EQ  : */ 20,
+    /* GT  : */ 10,
+    /* GE  : */ 10,
+    /* LT  : */ 10,
+    /* LE  : */ 20,
+    /* &&  : */ 3,
+    /* ||  : */ 2,
+    /* &  :  */ 6,
+    /* |  :  */ 4,
+    /* ^  :  */ 5,
+};
+
+int is_binop(int op)
+{
+    return op < OP_INC;
+}
+
+void set_parser_token_list(token_t *token_list)
+{
+    tokens = token_list;
+}
+
+token_t* next_token()
+{
+    return tokens;
+}
+
+token_t* forward(int n)
+{
+    for (int i = 0; i < n; ++i)
+    {
+        if (tokens[i].type == TOKEN_EOF)
+            return &tokens[i];
+    }
+
+    return &tokens[n];
+}
+
+token_t* consume_token()
+{
+    return tokens++;
+}
+
+token_t* accept(token_type_t type)
+{
+    token_t* cur_tok = next_token();
+    if (cur_tok->type != type)
+    {
+        return NULL;
+    }
+
+    consume_token();
+
+    return cur_tok;
+}
+
+token_t* expect(token_type_t type)
+{
+    token_t* cur_tok = next_token();
+    if (cur_tok->type != type)
+    {
+        error(cur_tok->row, cur_tok->col, cur_tok->filename, "expected '%s', got '%s'\n", tokens_str[type], tokens_str[cur_tok->type]);
+    }
+
+    consume_token();
+
+    return cur_tok;
+}
+
+static inline int token_is_type(token_t* ident)
+{
+    if (ident->type != TOK_IDENTIFIER)
+        return 0;
+
+    return get_type(ident->data.str).base_type != INVALID_TYPE;
+}
+
+void parse_type(type_t* type)
+{
+    token_t* base_type_tok = expect(TOK_IDENTIFIER);
+    *type = get_type(base_type_tok->data.str);  // base type
+    type->token = base_type_tok;
+
+    if (type->base_type == INVALID_TYPE)
+        error(base_type_tok->row, base_type_tok->col, base_type_tok->filename, "Invalid type '%s'\n", base_type_tok->data.str);
+
+    // the fun stuff : interpret pointer and array declarators
+    for(;;)
+    {
+        token_t* tok;
+        // is a pointer
+        if (next_token()->type == TOK_OPERATOR && next_token()->data.op == OP_MUL) // '*'
+        {
+            tok = consume_token();
+            type_t* base_type = (type_t*)danpa_alloc(sizeof(type_t));
+            *base_type = *type;
+            type->kind = POINTER;
+            type->pointer.pointed_type = base_type;
+            type->token = tok;
+        }
+        // is an array
+        else if ((tok = accept(TOK_OPEN_BRACKET)))
+        {
+            type_t* base_type = (type_t*)danpa_alloc(sizeof(type_t));
+            *base_type = *type;
+            type->kind = ARRAY;
+            type->token = tok;
+            type->array.array_type = base_type;
+            type->array.initial_size = NULL;
+            if (next_token()->type != TOK_CLOSE_BRACKET)
+            {
+                expression_t* expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+                parse_expr(expr, 0);
+                type->array.initial_size = expr;
+            }
+            expect(TOK_CLOSE_BRACKET);
+        }
+        // end of declarators
+        else
+            break;
+    }
+}
+
+void parse_variable_type(type_t* type)
+{
+    token_t* base_type_tok = next_token();
+    parse_type(type);
+
+    type_t void_type = mk_type(VOID);
+    if (cmp_types(type, &void_type))
+        error(base_type_tok->row, base_type_tok->col, base_type_tok->filename, "a variable cannot have the type 'void'\n", base_type_tok->data.str);
+}
+
+void parse_expr(expression_t* expr, int p);
+
+void parse_prim_expr(primary_expression_t* value)
+{
+    token_t* tok;
+    if (accept(TOK_OPEN_PARENTHESIS))
+    {
+        if (token_is_type(next_token()))
+        {
+            token_t* tok = next_token();
+            parse_type(&value->cast_expr.target_type);
+            value->type = CAST_EXPRESSION;
+            value->cast_expr.cast_type_token = tok;
+            expect(TOK_CLOSE_PARENTHESIS);
+
+            value->cast_expr.expr = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+            parse_prim_expr(value->cast_expr.expr);
+        }
+        else
+        {
+            expression_t expr;
+            parse_expr(&expr, 0);
+            expect(TOK_CLOSE_PARENTHESIS);
+
+            value->type = ENCLOSED;
+            expression_t* factor_expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+            *factor_expr = expr;
+            value->expr = factor_expr;
+        }
+    }
+    else if (next_token()->type == TOK_OPERATOR &&
+             (next_token()->data.op == OP_MUL))
+    {
+        tok = consume_token();
+        primary_expression_t* expr = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+        parse_prim_expr(expr);
+
+        value->type = POINTER_DEREF;
+        value->deref.asterisk_token = tok;
+        value->deref.pointer_expr = expr;
+    }
+    else if (next_token()->type == TOK_OPERATOR &&
+             (next_token()->data.op == OP_REF))
+    {
+        tok = consume_token();
+        primary_expression_t* expr = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+        parse_prim_expr(expr);
+
+        value->type = ADDR_GET;
+        value->addr.addr_token = tok;
+        value->addr.addr_expr = expr;
+    }
+    else if (next_token()->type == TOK_OPERATOR &&
+             (next_token()->data.op == OP_ADD || next_token()->data.op == OP_SUB
+              || next_token()->data.op == OP_LOGICNOT || next_token()->data.op == OP_BITNOT))
+    {
+        token_t* op = consume_token();
+
+        primary_expression_t* unary_op_factor = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+        parse_prim_expr(unary_op_factor);
+
+        value->type = UNARY_OP_FACTOR;
+        value->unary_expr.unary_op = op;
+        value->unary_expr.unary_value = unary_op_factor;
+    }
+    else if (accept(KEYWORD_ASM))
+    {
+        DYNARRAY_INIT(value->asm_expr.arguments, 4);
+
+        expect(TOK_OPEN_PARENTHESIS);
+        token_t* code = expect(TOK_STRING_LITERAL);
+        while (accept(TOK_COMMA))
+        {
+            expression_t* expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+            parse_expr(expr, 0);
+            DYNARRAY_ADD(value->asm_expr.arguments, expr);
+        }
+        if (accept(TOK_COLON))
+            parse_type(&value->asm_expr.ret_type);
+        else
+            value->asm_expr.ret_type = mk_type(VOID);
+        expect(TOK_CLOSE_PARENTHESIS);
+
+        value->type = ASM_EXPR;
+        value->asm_expr.asm_code = code->data.str;
+    }
+    else if (accept(KEYWORD_SIZEOF))
+    {
+        if (next_token()->type == IDENT && token_is_type(next_token()))
+        {
+            parse_type(&value->sizeof_expr.type);
+            value->sizeof_expr.is_expr = 0;
+        }
+        else
+        {
+            expression_t* expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+            parse_expr(expr, 0);
+            value->sizeof_expr.expr = expr;
+            value->sizeof_expr.is_expr = 1;
+        }
+
+        value->type = SIZEOF_EXPR;
+    }
+    else if (next_token()->type == TOK_IDENTIFIER)
+    {
+        // function call
+        if (forward(1)->type == TOK_OPEN_PARENTHESIS)
+        {
+            tok = expect(TOK_IDENTIFIER);
+            expect(TOK_OPEN_PARENTHESIS);
+            value->type = FUNCTION_CALL;
+            value->func_call.func_name.name = tok;
+            DYNARRAY_INIT(value->func_call.arguments, 4);
+
+            if (next_token()->type != TOK_CLOSE_PARENTHESIS)
+            {
+                expression_t* expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+                parse_expr(expr, 0);
+                DYNARRAY_ADD(value->func_call.arguments, expr);
+                while (accept(TOK_COMMA))
+                {
+                    expr = (expression_t*)danpa_alloc(sizeof(expression_t));
+                    parse_expr(expr, 0);
+                    DYNARRAY_ADD(value->func_call.arguments, expr);
+                }
+            }
+
+            expect(TOK_CLOSE_PARENTHESIS);
+        }
+        else
+        {
+            value->type = IDENT;
+            value->ident.name = expect(TOK_IDENTIFIER);
+        }
+    }
+    else if ((tok = accept(TOK_INTEGER_LITERAL)))
+    {
+        value->type = INT_CONSTANT;
+        value->int_constant = tok;
+    }
+    else if ((tok = accept(TOK_FLOAT_LITERAL)))
+    {
+        value->type = FLOAT_CONSTANT;
+        value->flt_constant = tok;
+    }
+    else if ((tok = accept(TOK_STRING_LITERAL)))
+    {
+        value->type = STRING_LITERAL;
+        value->string_lit = tok;
+    }
+    else
+    {
+        tok = next_token();
+        error(tok->row, tok->col, tok->filename, "expected expression got '%s'\n", tokens_str[tok->type]);
+    }
+
+    // array subscript
+    for (;;)
+    {
+        if ((tok = accept(TOK_OPEN_BRACKET)))
+        {
+            primary_expression_t* expr_within = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+            expression_t* sub_expr    = (expression_t*)danpa_alloc(sizeof(expression_t));
+            parse_expr(sub_expr, 0);
+            expect(TOK_CLOSE_BRACKET);
+
+            *expr_within = *value;
+            value->type = ARRAY_SUBSCRIPT;
+            value->array_sub.bracket_token = tok;
+            value->array_sub.array_expr = expr_within;
+            value->array_sub.subscript_expr = sub_expr;
+        }
+        else if ((tok = accept(TOK_DOT)) || (tok = accept(TOK_ARROW)))
+        {
+            primary_expression_t* expr_within = (primary_expression_t*)danpa_alloc(sizeof(primary_expression_t));
+            *expr_within = *value;
+            token_t* field = expect(TOK_IDENTIFIER);
+
+            value->type = STRUCT_ACCESS;
+            value->struct_access.op_token = tok;
+            value->struct_access.struct_expr = expr_within;
+            value->struct_access.field_name = field;
+            value->struct_access.indirect_access = (tok->type == TOK_ARROW);
+        }
+        else
+            break;
+    }
+}
+
+void parse_return_statement(return_statement_t* ret_statement)
+{
+    expression_t expr;
+
+    expect(KEYWORD_RETURN);
+    parse_expr(&expr, 0);
+
+    ret_statement->expr = expr;
+
+    expect(TOK_SEMICOLON);
+}
+
+void parse_statement(statement_t* statement);
+
+void parse_if_statement(if_statement_t* if_statement)
+{
+    if_statement->statement = (statement_t*)danpa_alloc(sizeof(statement_t));
+
+    expect(KEYWORD_IF);
+    expect(TOK_OPEN_PARENTHESIS);
+    parse_expr(&if_statement->test, 0);
+    expect(TOK_CLOSE_PARENTHESIS);
+    parse_statement(if_statement->statement);
+
+    if (accept(KEYWORD_ELSE))
+    {
+        statement_t* stat = (statement_t*)(danpa_alloc(sizeof(statement_t)));
+
+        parse_statement(stat);
+
+        if_statement->else_statement = stat;
+    }
+    else
+    {
+        if_statement->else_statement = NULL;
+    }
+}
+
+void parse_while_statement(while_statement_t* while_statement)
+{
+    while_statement->statement = (statement_t*)danpa_alloc(sizeof(statement_t));
+
+    expect(KEYWORD_WHILE);
+    expect(TOK_OPEN_PARENTHESIS);
+    parse_expr(&while_statement->test, 0);
+    expect(TOK_CLOSE_PARENTHESIS);
+    parse_statement(while_statement->statement);
+}
+
+void parse_do_while_statement(do_while_statement_t* while_statement)
+{
+    while_statement->statement = (statement_t*)danpa_alloc(sizeof(statement_t));
+
+    expect(KEYWORD_DO);
+    parse_statement(while_statement->statement);
+
+    expect(KEYWORD_WHILE);
+    expect(TOK_OPEN_PARENTHESIS);
+    parse_expr(&while_statement->test, 0);
+    expect(TOK_CLOSE_PARENTHESIS);
+    expect(TOK_SEMICOLON);
+}
+
+void parse_assignment(const primary_expression_t* prim_expr, assignment_t* assignment)
+{
+    expression_t expr;
+    assignment->var = *prim_expr;
+    assignment->eq_token = expect(TOK_ASSIGNMENT_OP);
+    parse_expr(&expr, 0);
+
+    assignment->expr = expr;
+
+    expect(TOK_SEMICOLON);
+}
+
+void parse_typedef_declaration(typedef_declaration_t* decl)
+{
+    expect(KEYWORD_TYPEDEF);
+    parse_type(&decl->type);
+    decl->name = expect(TOK_IDENTIFIER);
+
+    if (get_type(decl->name->data.str).base_type != INVALID_TYPE)
+        error(decl->name->row, decl->name->col, decl->name->filename, "typename '%s' is already taken\n", decl->name->data.str);
+
+    add_typedef(decl->name->data.str, decl->type);
+
+    expect(TOK_SEMICOLON);
+}
+
+void parse_variable_declaration(variable_declaration_t* decl)
+{
+    parse_variable_type(&decl->type);
+    decl->name = expect(TOK_IDENTIFIER);
+    if (accept(TOK_ASSIGNMENT_OP))
+    {
+        assignment_t* assigment = (assignment_t*)danpa_alloc(sizeof(assignment_t));
+        parse_expr(&assigment->expr, 0);
+        assigment->var.type = IDENT;
+        assigment->var.ident.name = decl->name;
+
+        decl->init_assignment = assigment;
+    }
+    else
+    {
+        decl->init_assignment = NULL;
+    }
+    expect(TOK_SEMICOLON);
+}
+
+void parse_struct_declaration(struct_declaration_t* decl)
+{
+    DYNARRAY_INIT(decl->field_decls, 16);
+
+    expect(KEYWORD_STRUCT);
+    decl->structure.name = expect(TOK_IDENTIFIER);
+    expect(TOK_OPEN_BRACE);
+
+    while (!accept(TOK_CLOSE_BRACE))
+    {
+        variable_declaration_t field_decl;
+        parse_variable_declaration(&field_decl);
+        DYNARRAY_ADD(decl->field_decls, field_decl);
+    }
+
+    DYNARRAY_INIT(decl->structure.fields, decl->field_decls.size);
+    DYNARRAY_RESIZE(decl->structure.fields, decl->field_decls.size);
+    unsigned byte_offset = 0;
+    for (int i = 0; i < decl->field_decls.size; ++i)
+    {
+        decl->structure.fields.ptr[i].name = decl->field_decls.ptr[i].name;
+        decl->structure.fields.ptr[i].type = decl->field_decls.ptr[i].type;
+        decl->structure.fields.ptr[i].byte_size = sizeof_type(&decl->field_decls.ptr[i].type);
+        decl->structure.fields.ptr[i].offset = byte_offset;
+        byte_offset += decl->structure.fields.ptr[i].byte_size;
+    }
+    decl->structure.byte_size = byte_offset; // cumulative size
+    define_structure(&decl->structure);
+
+    expect(TOK_SEMICOLON);
+}
+
+void parse_declaration(declaration_t* decl)
+{
+    if (token_is_type(next_token()))
+    {
+        decl->type = VARIABLE_DECLARATION;
+        parse_variable_declaration(&decl->var);
+    }
+    else if (next_token()->type == KEYWORD_TYPEDEF)
+    {
+        decl->type = TYPEDEF_DECLARATION;
+        parse_typedef_declaration(&decl->typedef_decl);
+    }
+    else
+    {
+        decl->type = STRUCT_DECLARATION;
+        parse_struct_declaration(&decl->struct_decl);
+    }
+}
+
+void parse_statement(statement_t* statement)
+{
+    if (token_is_type(next_token()) || next_token()->type == KEYWORD_TYPEDEF)
+    {
+        declaration_t decl;
+        parse_declaration(&decl);
+        statement->type = DECLARATION;
+        statement->declaration = decl;
+    }
+    else if (next_token()->type == KEYWORD_RETURN)
+    {
+        return_statement_t ret;
+        parse_return_statement(&ret);
+        statement->type = RETURN_STATEMENT;
+        statement->return_statement = ret;
+    }
+    else if (next_token()->type == KEYWORD_IF)
+    {
+        if_statement_t if_statement;
+        parse_if_statement(&if_statement);
+        statement->type = IF_STATEMENT;
+        statement->if_statement = if_statement;
+    }
+    else if (next_token()->type == KEYWORD_WHILE)
+    {
+        while_statement_t while_statement;
+        parse_while_statement(&while_statement);
+        statement->type = WHILE_STATEMENT;
+        statement->while_statement = while_statement;
+    }
+    else if (next_token()->type == KEYWORD_DO)
+    {
+        do_while_statement_t while_statement;
+        parse_do_while_statement(&while_statement);
+        statement->type = DO_WHILE_STATEMENT;
+        statement->do_while_statement = while_statement;
+    }
+    else if (next_token()->type == TOK_OPEN_BRACE)
+    {
+        consume_token();
+
+        DYNARRAY_INIT(statement->compound.statement_list, 8);
+
+        while (!accept(TOK_CLOSE_BRACE))
+        {
+            statement_t st;
+            parse_statement(&st);
+            DYNARRAY_ADD(statement->compound.statement_list, st);
+        }
+
+        statement->type = COMPOUND_STATEMENT;
+    }
+    else
+    {
+        expression_t expr;
+        parse_expr(&expr, 0);
+        if (accept(TOK_SEMICOLON))
+        {
+            statement->expression = expr;
+            statement->type = DISCARDED_EXPRESSION;
+        }
+        else
+        {
+            if (expr.kind != PRIM_EXPR)
+            {
+                token_t* tok = next_token();
+                error(tok->row, tok->col, tok->filename, "Expected a primary expression\n");
+            }
+            assignment_t assignment;
+            parse_assignment(&expr.prim_expr, &assignment);
+            statement->type = ASSIGNMENT;
+            statement->assignment = assignment;
+        }
+    }
+}
+
+void parse_function(function_t* func)
+{
+    DYNARRAY_INIT(func->args, 8);
+    DYNARRAY_INIT(func->statement_list, 128);
+    DYNARRAY_INIT(func->signature.parameter_types, 8);
+
+    parse_type(&func->signature.ret_type);
+    token_t* name = expect(TOK_IDENTIFIER);
+    expect(TOK_OPEN_PARENTHESIS);
+    if (next_token()->type == TOK_IDENTIFIER)
+    {
+        parameter_t param;
+        parse_variable_type(&param.type);
+        param.name = expect(TOK_IDENTIFIER);
+        DYNARRAY_ADD(func->args, param);
+        DYNARRAY_ADD(func->signature.parameter_types, param.type);
+
+        while (accept(TOK_COMMA))
+        {
+            parse_variable_type(&param.type);
+            param.name = expect(TOK_IDENTIFIER);
+            DYNARRAY_ADD(func->args, param);
+            DYNARRAY_ADD(func->signature.parameter_types, param.type);
+        }
+    }
+    expect(TOK_CLOSE_PARENTHESIS);
+    expect(TOK_OPEN_BRACE);
+
+    func->name = name;
+
+    while (next_token()->type != TOK_CLOSE_BRACE)
+    {
+        statement_t statement;
+        parse_statement(&statement);
+        DYNARRAY_ADD(func->statement_list, statement);
+    }
+
+    expect(TOK_CLOSE_BRACE);
+}
+
+void parse_program(program_t* program)
+{
+    DYNARRAY_INIT(program->function_list, 16);
+    DYNARRAY_INIT(program->global_declarations, 32);
+
+    while (next_token()->type != TOKEN_EOF)
+    {
+        // function declaration
+        if (token_is_type(next_token()) && forward(1)->type == TOK_IDENTIFIER && forward(2)->type == TOK_OPEN_PARENTHESIS)
+        {
+            function_t func;
+            parse_function(&func);
+            DYNARRAY_ADD(program->function_list, func);
+        }
+        else
+        {
+            declaration_t decl;
+            parse_declaration(&decl);
+            DYNARRAY_ADD(program->global_declarations, decl);
+        }
+    }
+}
+
+void parse_expr(expression_t* expr, int expr_precedence)
+{
+    expression_t* lhs = (expression_t*)danpa_alloc(sizeof(expression_t));
+
+    primary_expression_t val;
+    parse_prim_expr(&val);
+    lhs->kind = PRIM_EXPR;
+    lhs->prim_expr = val;
+
+    token_t* op = next_token();
+    while (op->type == TOK_OPERATOR && is_binop(op->data.op)
+           && precedence[op->data.op] >= expr_precedence)
+    {
+        consume_token();
+
+        expression_t rhs;
+        parse_expr(&rhs, precedence[op->data.op] + 1);
+
+        expression_t* new_node = (expression_t*)danpa_alloc(sizeof(expression_t));
+
+        new_node->kind = BINOP;
+        new_node->binop = (binop_t*)danpa_alloc(sizeof(binop_t));
+        new_node->binop->left = *lhs;
+        new_node->binop->right = rhs;
+        new_node->binop->op = op;
+
+        lhs = new_node;
+
+        op = next_token();
+    }
+
+    *expr = *lhs;
+}

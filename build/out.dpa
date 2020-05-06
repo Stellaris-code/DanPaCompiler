@@ -1,0 +1,38 @@
+collatz:
+movl 0 // get 'n'
+pushl 0 // n
+pushi #2
+mod
+pushi #0
+eq
+test
+jf .L0
+pushl 0 // n
+pushi #2
+idiv
+ret
+jmp .L1
+.L0:
+pushi #3
+pushl 0 // n
+mul
+pushi #1
+add
+ret
+.L1:
+ret
+main:
+syscall #1
+movl 0 // val = *sp
+.L2:
+pushl 0 // val
+call collatz
+movl 0 // val = *sp
+pushl 0 // val
+syscall #0
+pushl 0 // val
+pushi #1
+neq
+test
+jt .L2
+ret

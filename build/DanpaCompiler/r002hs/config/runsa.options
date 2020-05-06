@@ -1,0 +1,16 @@
+-r
+D:\Compiegne C++\Projets C++\DanPaCompiler\DanPaCompiler\build\DanpaCompiler\r002hs
+--itt-config=frame
+--collector=vtsspp
+--data-limit-mb=1000
+--disk-space-limit=0
+--mrte-type=java,dotnet
+--event-config=CPU_CLK_UNHALTED.THREAD:sa=3500000,CPU_CLK_UNHALTED.REF_TSC:sa=3500000,INST_RETIRED.ANY:sa=3500000,CPU_CLK_UNHALTED.REF_XCLK:sa=100003,CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:sa=100003,UOPS_RETIRED.RETIRE_SLOTS:sa=2000003
+--platform-type=88
+--sample-after-multiplier=0.1
+--uncore-sampling-interval=10
+--mrte-mode=auto
+--itt-config=task,event,counter
+--p-state-trigger=CPU_CLK_UNHALTED.REF_TSC
+--
+D:\Compiegne C++\Projets C++\DanPaCompiler\DanPaCompiler\build\DanPaCompiler.exe

@@ -25,8 +25,30 @@ SOFTWARE.
 #ifndef CODE_GENERATOR_H
 #define CODE_GENERATOR_H
 
-#include "parser.h"
+#include "ast_nodes.h"
+
+#include <stdio.h>
+
+typedef DYNARRAY(const char*) label_list_t;
+
+typedef struct instruction_t
+{
+    label_list_t labels;
+    const char* opcode;
+    const char* operand;
+    const char* comment;
+    struct instruction_t* prev;
+    struct instruction_t* next;
+} instruction_t;
+
+instruction_t* instruction_list;
+
+extern const char binop_opcodes[POD_TYPES_END][OP_BIN_END][8];
+extern const char unary_opcodes[POD_TYPES_END][OP_UNARY_END - OP_BIN_END][8];
 
 void generate_program(program_t* program);
+void generate_expression(expression_t* expr);
+
+void generate(const char* op, const char* operand, ...);
 
 #endif // CODE_GENERATOR_H

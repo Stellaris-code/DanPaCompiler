@@ -1,0 +1,35 @@
+#define VARIADIC(first, second, ...)  asm("syscall 0x0", __VA_COUNT__, first, second, __VA_ARGS__)
+
+#warning "obsolete header"
+//#error "unsupported platform"
+
+str tolower(str b)
+{
+
+}
+
+int main() {
+
+	str a = "bon";
+	str b = "jour";
+	a += b;
+	
+	int* ptr1;
+	int* ptr2;
+	
+	int bob;
+	if (a == "bon")
+		bob = 4;
+	else
+		bob = 8;
+
+	asm("syscall 0x0", a);
+	asm("syscall 0x0", b[0]);
+	asm("syscall 0x0", b.tolower());
+	
+	VARIADIC(1);
+	
+	ptr1 += ptr2;
+
+    return 0;
+}

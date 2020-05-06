@@ -1,0 +1,18 @@
+-r
+D:\Compiegne C++\Projets C++\DanPaCompiler\DanPaCompiler\build\DanpaCompiler\r000hs
+--stack-stitching
+--data-limit-mb=1000
+--disk-space-limit=0
+--mrte-type=java,dotnet,python
+--itt-config=frame
+--itt-config=task,event,counter
+--stackwalk=offline
+--mrte-mode=auto
+--type=cpu:counters:nostack
+--type=cpu:stack
+--interval=10
+--event-config=CPU_CLK_UNHALTED.THREAD:sa=3500000,CPU_CLK_UNHALTED.REF_TSC:sa=3500000,INST_RETIRED.ANY:sa=3500000,CPU_CLK_UNHALTED.REF_XCLK:sa=100003,CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:sa=100003,UOPS_RETIRED.RETIRE_SLOTS:sa=2000003
+--collector=emon
+--count
+--
+D:\Compiegne C++\Projets C++\DanPaCompiler\DanPaCompiler\build\DanPaCompiler.exe

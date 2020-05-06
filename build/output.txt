@@ -1,0 +1,86 @@
+Program :
+  Function int collatz(int)
+    Argument int n
+    Type int 
+      If :
+        Expr of type int
+          Binop :
+            Expr of type int
+              Binop :
+                Expr of type int
+                  Identifier n <int, id 0>
+              '%' 
+                Expr of type int
+                  Integer 2
+          '==' 
+            Expr of type int
+              Integer 0
+      Then :
+          Return statement :
+            Expr of type int
+              Binop :
+                Expr of type int
+                  Identifier n <int, id 0>
+              '/' 
+                Expr of type int
+                  Integer 2
+      Else:
+          Return statement :
+            Expr of type int
+              Binop :
+                Expr of type int
+                  Binop :
+                    Expr of type int
+                      Integer 3
+                  '*' 
+                    Expr of type int
+                      Identifier n <int, id 0>
+              '+' 
+                Expr of type int
+                  Integer 1
+  Function void main()
+        Declaration val of type int
+          Type int 
+          Identifier val <int, id 0>
+          =
+          Expr of type int
+              Asm code : 
+              ---
+syscall 1
+              ---
+      Expr of type void
+          Asm code : 
+          ---
+syscall 0
+          ---
+collatz:
+movl 0 // get 'n'
+pushl 0 // n
+pushi #2
+op '%'
+pushi #0
+op '=='
+test
+jf .L0
+pushl 0 // n
+pushi #2
+op '/'
+ret
+jmp .L1
+.L0:
+pushi #3
+pushl 0 // n
+op '*'
+pushi #1
+op '+'
+ret
+.L1:
+ret
+main:
+syscall 1
+movl 0 // val = *sp
+pushl 0 // val
+call collatz
+syscall 0
+ret
+allocated 105230 + 32768 bytes, 86/4096 slots

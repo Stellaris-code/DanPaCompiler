@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="DanPaCompiler"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler">
+				<Option output="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/DanPaCompiler.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/."/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler"/>
+					<CompileFile command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="DanPaCompiler/fast">
+				<Option output="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/DanPaCompiler.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/."/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include/c++/backward"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../include"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/include-fixed"/>
+					<Add directory="F:/TDM-GCC-64/bin/../lib/gcc/x86_64-w64-mingw32/5.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 DanPaCompiler/fast"/>
+					<CompileFile command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/TDM-GCC-64/bin/mingw32-make.exe -f &quot;D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/alloc.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/alloc.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/asm_optimizer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/asm_optimizer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_functions.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_nodes.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_optimize.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_optimize.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_printer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/ast_printer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/code_generator.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/code_generator.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/code_printer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/code_printer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/color.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/dynarray.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/error.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/error.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/file_read.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/file_read.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/hash.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/hash_table.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/hash_table.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/lexer.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/lexer.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/main.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/operators.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/operators.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/parser.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/parser.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/pp_expr_parser.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/pp_expr_parser.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/preprocessor.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/preprocessor.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/semantic_pass.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/semantic_pass.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/source_location.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/types.c">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/src/types.h">
+			<Option target="DanPaCompiler"/>
+		</Unit>
+		<Unit filename="D:/Compiegne C++/Projets C++/DanPaCompiler/DanPaCompiler/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
